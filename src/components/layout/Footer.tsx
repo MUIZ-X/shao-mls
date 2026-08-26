@@ -1,0 +1,2 @@
+import { Link } from 'react-router-dom';
+export function Footer() { return <footer className="site-footer"><div><span className="eyebrow">University of Ilorin · Department of Medical Laboratory Science</span><h2>COBES / Shao Community</h2><p>Together for Health: Stand with Science.</p></div><div><p>Source-led community health project archive.</p><Link to="/reports">View project sources →</Link></div><small>© 2026 University of Ilorin, Department of Medical Laboratory Science.</small></footer>; }
