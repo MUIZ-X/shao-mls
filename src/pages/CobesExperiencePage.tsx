@@ -1,32 +1,53 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { MloExplorer } from '../data/mloContent';
 import {
   ArrowDownRight,
   ArrowRight,
   BookOpen,
   ChartNoAxesCombined,
   ChevronRight,
-  CircleCheck,
-  Download,
   ExternalLink,
-  FileText,
   MapPinned,
   ShieldCheck,
   Sparkles,
   UsersRound,
+  ArrowUp,
   X,
 } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { SectionSlideshow } from '../components/SectionSlideshow';
+import { fieldMapLocations, type FieldMapLocationId } from '../data/fieldMapLocations';
 import { Navbar } from '../components/navigation/Navbar';
 import {
-  archiveItems,
   assessmentRegions,
   journeyStages,
-  learningExperiences,
+  navigationItems,
   searchItems,
   teamCategories,
   type SearchItem,
 } from '../data/cobesContent';
+
+const FieldLocationsMap = lazy(() => import('../components/3d/FieldLocationsMap').then(({ FieldLocationsMap: Map }) => ({ default: Map })));
+const heroSlides = [
+  { src: '/cobes-data/shao-imgs/shaonova-img.jpg', alt: 'COBES students in laboratory coats gathered for a group photograph' },
+  { src: '/cobes-data/shao-imgs/shao-village.jpg', alt: 'Shao community landscape' },
+  { src: '/cobes-data/shao-imgs/shao-mls-outreach.jpg', alt: 'Medical laboratory science outreach activity' },
+];
+
+const journeyBackdropSlides = ['/cobes-data/shao-imgs/shao-village.jpg', '/cobes-data/shao-imgs/shao-mls-outreach.jpg', '/cobes-data/shao-imgs/shaonova-img.jpg'];
+const teamBackdropSlides = ['/cobes-data/shao-imgs/shaonova-img.jpg', '/cobes-data/shao-imgs/shao-mls-outreach.jpg', '/cobes-data/shao-imgs/shao-village.jpg'];
+const teamActivities = [
+  {
+    title: 'Community health outreach',
+    image: '/cobes-data/shao-imgs/shao-mls-outreach.jpg',
+    alt: 'COBES students taking part in community health outreach in Shao',
+  },
+  {
+    title: 'Team planning and collaboration',
+    image: '/cobes-data/shao-imgs/shaonova-img.jpg',
+    alt: 'Shaonova students gathered together during their COBES field experience',
+  },
+];
 
 const reveal = {
   hidden: { opacity: 0, y: 24 },
@@ -75,16 +96,16 @@ const assessmentDistributions: Distribution[] = [
     title: 'Age distribution of respondents',
     type: 'bar',
     data: [
-      { label: '18–27', value: 24.7 },
-      { label: '28–37', value: 21.9 },
-      { label: '38–47', value: 19.4 },
-      { label: '48–57', value: 10.4 },
-      { label: '58–67', value: 11.1 },
-      { label: '68–77', value: 9.4 },
-      { label: '78–87', value: 3.1 },
+      { label: '18â€“27', value: 24.7 },
+      { label: '28â€“37', value: 21.9 },
+      { label: '38â€“47', value: 19.4 },
+      { label: '48â€“57', value: 10.4 },
+      { label: '58â€“67', value: 11.1 },
+      { label: '68â€“77', value: 9.4 },
+      { label: '78â€“87', value: 3.1 },
     ],
     description:
-      'The respondents comprised individuals across a wide range of age groups. The most frequently occurring age was 30 years, while the reported median age was 35 years. The average age was estimated to be approximately 38–40 years.',
+      'The respondents comprised individuals across a wide range of age groups. The most frequently occurring age was 30 years, while the reported median age was 35 years. The average age was estimated to be approximately 38â€“40 years.',
   },
   {
     id: 'religion',
@@ -123,13 +144,13 @@ const assessmentDistributions: Distribution[] = [
     title: 'Number of people in households',
     type: 'bar',
     data: [
-      { label: '1–3', value: 10.7 },
-      { label: '4–6', value: 44.1 },
-      { label: '7–10', value: 32.2 },
+      { label: '1â€“3', value: 10.7 },
+      { label: '4â€“6', value: 44.1 },
+      { label: '7â€“10', value: 32.2 },
       { label: '11+', value: 13.1 },
     ],
     description:
-      'The survey indicated that an average of approximately 7 people live in a household. Households containing 4–6 people formed the largest reported group.',
+      'The survey indicated that an average of approximately 7 people live in a household. Households containing 4â€“6 people formed the largest reported group.',
   },
   {
     id: 'sex',
@@ -169,22 +190,22 @@ const assessmentDistributions: Distribution[] = [
       { label: 'Primary', value: 11.9 },
       { label: 'None', value: 0.5 },
       { label: 'ND', value: 0.2 },
-      { label: 'Master’s', value: 0.2 },
+      { label: 'Masterâ€™s', value: 0.2 },
       { label: 'HND', value: 0.2 },
     ],
     description:
-      'The educational background of the people of Shao varied considerably. The majority completed secondary school, while others had tertiary, no formal, and primary education. Other recorded qualifications included ND, HND and Master’s degrees.',
+      'The educational background of the people of Shao varied considerably. The majority completed secondary school, while others had tertiary, no formal, and primary education. Other recorded qualifications included ND, HND and Masterâ€™s degrees.',
   },
 ];
 
 const PIE_COLORS = [
-  '#2563eb',
-  '#f97316',
-  '#16a34a',
-  '#dc2626',
-  '#7c3aed',
-  '#0891b2',
-  '#db2777',
+  '#0A192F',
+  '#103A2B',
+  '#145637',
+  '#176F43',
+  '#1A874F',
+  '#1C9E5B',
+  '#35AD6D',
 ];
 
 const polarToCartesian = (
@@ -231,9 +252,6 @@ function AnimatedPieChart({ data }: { data: DistributionItem[] }) {
         viewBox="0 0 500 420"
         role="img"
         aria-label="Community assessment distribution pie chart"
-        initial={{ opacity: 0, scaleX: 0.03, scaleY: 0.92 }}
-        animate={{ opacity: 1, scaleX: 1, scaleY: 1 }}
-        transition={{ duration: 0.5, ease: 'easeOut' }}
       >
         <g>
           {data.map((item, index) => {
@@ -247,23 +265,29 @@ function AnimatedPieChart({ data }: { data: DistributionItem[] }) {
 
             return (
               <g key={item.label}>
-                <path
-                  d={describePieSlice(250, 210, 155, startAngle, endAngle)}
+                <motion.path
+                  initial={{ d: describePieSlice(250, 210, 0.01, startAngle, endAngle) }}
+                  animate={{ d: describePieSlice(250, 210, 155, startAngle, endAngle) }}
+                  transition={{ duration: 0.72, delay: index * 0.075, ease: [0.22, 1, 0.36, 1] }}
                   fill={PIE_COLORS[index % PIE_COLORS.length]}
                   stroke="#ffffff"
                   strokeWidth="3"
                 />
 
                 {item.value >= 3 && (
-                  <text
+                  <motion.text
                     x={labelPoint.x}
                     y={labelPoint.y}
                     textAnchor="middle"
                     dominantBaseline="middle"
                     className="cobes-pie-chart__label"
+                    style={{ fill: index >= 5 ? '#0A192F' : '#ffffff' }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.28, delay: 0.38 + index * 0.075 }}
                   >
                     {item.value}%
-                  </text>
+                  </motion.text>
                 )}
               </g>
             );
@@ -329,12 +353,20 @@ function AnimatedBarChart({ data }: { data: DistributionItem[] }) {
 }
 
 export function CobesExperiencePage() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const pathname = location.pathname.replace(/\/+$/, '') || '/';
+  const page = navigationItems.find((item) => item.path === pathname)?.target ?? 'home';
   const [selectedDistributionId, setSelectedDistributionId] = useState('health-challenges');
   const [selectedRegionId, setSelectedRegionId] = useState<string>(assessmentRegions[0].id);
-  const [selectedLearningId, setSelectedLearningId] = useState<string>(learningExperiences[0].id);
+  const [selectedMapLocationId, setSelectedMapLocationId] = useState<FieldMapLocationId>('oke-lade');
   const [selectedJourneyId, setSelectedJourneyId] = useState<string>(journeyStages[0].id);
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null);
+  const selectedTeam = teamCategories.find((team) => team.id === selectedTeamId) ?? null;
   const [modalOpen, setModalOpen] = useState(false);
+  const [journeyModalId, setJourneyModalId] = useState<string | null>(null);
+  const journeyModalStage = journeyStages.find((stage) => stage.id === journeyModalId) ?? null;
+  const [activeHeroSlide, setActiveHeroSlide] = useState(0);
 
   const selectedDistribution = useMemo(
     () =>
@@ -347,36 +379,89 @@ export function CobesExperiencePage() {
     () => assessmentRegions.find((region) => region.id === selectedRegionId) ?? assessmentRegions[0],
     [selectedRegionId],
   );
-  const selectedLearning = useMemo(
-    () => learningExperiences.find((item) => item.id === selectedLearningId) ?? learningExperiences[0],
-    [selectedLearningId],
-  );
 
+  const selectedMapLocation = fieldMapLocations.find((location) => location.id === selectedMapLocationId) ?? fieldMapLocations[0];
+
+  const handleMapLocationSelect = (locationId: FieldMapLocationId) => {
+    const location = fieldMapLocations.find((item) => item.id === locationId);
+    if (!location) return;
+    setSelectedMapLocationId(locationId);
+    if (location.assessmentRegionId) setSelectedRegionId(location.assessmentRegionId);
+  };
   useEffect(() => {
-    if (!modalOpen) return undefined;
+    const timer = window.setInterval(() => {
+      setActiveHeroSlide((current) => (current + 1) % heroSlides.length);
+    }, 3500);
+    return () => window.clearInterval(timer);
+  }, []);
+  useEffect(() => {
+    if (!modalOpen && !journeyModalStage && !selectedTeam) return undefined;
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setModalOpen(false);
+      if (event.key === 'Escape') {
+        setModalOpen(false);
+        setJourneyModalId(null);
+        setSelectedTeamId(null);
+      }
     };
     document.addEventListener('keydown', onKeyDown);
     return () => document.removeEventListener('keydown', onKeyDown);
-  }, [modalOpen]);
+  }, [modalOpen, journeyModalStage, selectedTeam]);
+
+  useEffect(() => {
+    setSelectedTeamId(null);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    const targetId = decodeURIComponent(location.hash.slice(1));
+    if (targetId) {
+      window.setTimeout(() => scrollToContent(targetId), 0);
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [location.pathname, location.hash]);
 
   const handleSearchNavigate = (item: SearchItem) => {
-    if (item.action?.type === 'region') setSelectedRegionId(item.action.value);
-    if (item.action?.type === 'learning') setSelectedLearningId(item.action.value);
-    if (item.action?.type === 'journey') setSelectedJourneyId(item.action.value);
-    if (item.action?.type === 'team') setSelectedTeamId(item.action.value);
-    scrollToContent(item.target);
+    let targetPath = navigationItems.find((navItem) => navItem.target === item.target)?.path ?? (item.target === 'about-cobes' ? '/' : item.target.startsWith('learning-') ? '/learning-objectives' : '/');
+    if (item.action?.type === 'region') {
+      setSelectedRegionId(item.action.value);
+      targetPath = '/community-assessment';
+    }
+    if (item.action?.type === 'learning') {
+      targetPath = '/learning-objectives';
+    }
+    if (item.action?.type === 'journey') {
+      setSelectedJourneyId(item.action.value);
+      targetPath = '/project-journey';
+    }
+    if (item.action?.type === 'team') {
+      setSelectedTeamId(null);
+      targetPath = '/team';
+    }
+    navigate({ pathname: targetPath, hash: `#${item.target}` });
   };
 
   return (
     <div className="cobes-site-shell">
-      <Navbar searchItems={searchItems} onSearchNavigate={handleSearchNavigate} />
+      <Navbar currentPage={page} searchItems={searchItems} onSearchNavigate={handleSearchNavigate} />
 
       <main>
+        {page === 'home' && (
         <section id="home" className="cobes-hero scroll-target" aria-labelledby="home-heading">
-          <div className="cobes-hero__backdrop" />
+          <div className="cobes-hero__backdrop" aria-hidden="true">
+          <AnimatePresence initial={false}>
+            <motion.img
+              key={heroSlides[activeHeroSlide].src}
+              className="cobes-hero__backdrop-image"
+              src={heroSlides[activeHeroSlide].src}
+              alt=""
+              initial={{ opacity: 0, x: 36, scale: 1.04 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{ opacity: 0, x: -44, scale: 1.02 }}
+              transition={{ duration: 0.9, ease: 'easeInOut' }}
+            />
+          </AnimatePresence>
+        </div>
           <div className="cobes-container cobes-hero__layout">
             <motion.div
               className="cobes-hero__copy"
@@ -385,7 +470,7 @@ export function CobesExperiencePage() {
               variants={reveal}
               transition={{ duration: 0.55, ease: 'easeOut' }}
             >
-              <p className="cobes-eyebrow">University of Ilorin · Medical Laboratory Science · Class of 2026</p>
+              <p className="cobes-eyebrow">University of Ilorin Â· Medical Laboratory Science Â· Class of 2026</p>
               <img
                 className="cobes-hero__brand"
                 src="/cobes-data/shao-imgs/shaonova-logo.png"
@@ -400,12 +485,12 @@ export function CobesExperiencePage() {
                 and accessible laboratory services in Shao.
               </p>
               <div className="cobes-button-row">
-                <a className="cobes-button cobes-button--primary" href="#about-cobes">
+                <Link className="cobes-button cobes-button--primary" to="/#about-cobes">
                   Explore COBES <ArrowDownRight aria-hidden="true" size={18} />
-                </a>
-                <a className="cobes-button cobes-button--quiet" href="#community-assessment">
+                </Link>
+                <Link className="cobes-button cobes-button--quiet" to="/community-assessment">
                   View assessment <ArrowRight aria-hidden="true" size={17} />
-                </a>
+                </Link>
               </div>
               <dl className="cobes-hero__facts" aria-label="COBES project overview">
                 <div>
@@ -440,7 +525,9 @@ export function CobesExperiencePage() {
             </motion.aside>
           </div>
         </section>
+        )}
 
+        {page === 'home' && (
         <section id="about-cobes" className="cobes-photo-section cobes-about scroll-target" aria-labelledby="about-heading">
           <div className="cobes-photo-section__overlay" />
           <div className="cobes-container cobes-about__layout">
@@ -491,7 +578,9 @@ export function CobesExperiencePage() {
             </motion.div>
           </div>
         </section>
+        )}
 
+        {page === 'community-assessment' && (
         <section
           id="community-assessment"
           className="cobes-photo-section cobes-assessment scroll-target"
@@ -519,16 +608,40 @@ export function CobesExperiencePage() {
 
             <div className="cobes-assessment__overview">
               <motion.figure
-                className="cobes-map-card"
+                className="cobes-map-card cobes-map-card--interactive"
                 initial={{ opacity: 0, y: 28 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.5, ease: 'easeOut' }}
               >
-                <img src="/cobes-data/shao-imgs/Shao-map.png" alt="Map of Shao community and project locations" />
+                <div className="cobes-map-stage" aria-label="Interactive three-dimensional Shao field locations map">
+                  <Suspense fallback={<div className="cobes-map-loading" role="status">Loading interactive field map…</div>}>
+                    <FieldLocationsMap selectedLocationId={selectedMapLocationId} onSelect={handleMapLocationSelect} />
+                  </Suspense>
+                </div>
+                <div className="cobes-map-key" aria-label="Legend from the supplied field map">
+                  <span className="cobes-map-key__title">Map key</span>
+                  <span><i className="cobes-map-key__mark is-mosque">M</i>Mosque</span>
+                  <span><i className="cobes-map-key__mark is-church">+</i>Church</span>
+                  <span><i className="cobes-map-key__mark is-palace">P</i>Palace</span>
+                  <span><i className="cobes-map-key__mark is-health">+</i>Health facility</span>
+                  <span><i className="cobes-map-key__mark is-outreach">O</i>Outreach</span>
+                  <span><i className="cobes-map-key__mark is-project">●</i>Project</span>
+                  <span><i className="cobes-map-key__mark is-mapping">↗</i>Mapping</span>
+                </div>
+                <p className="cobes-map-source-note">Terrain relief and building placement are illustrative reconstructions from the supplied field map; elevations have not been surveyed.</p>
+                <div className="cobes-map-instructions"><span>Drag to rotate</span><span>Scroll to move down the page</span></div>
+                <div className="cobes-map-selection" aria-live="polite">
+                  <div><span>Selected field location</span><strong>{selectedMapLocation.label}</strong></div>
+                  <small>
+                    {selectedMapLocation.assessmentRegionId
+                      ? 'The matching regional assessment is selected below.'
+                      : 'No verified note is listed here; the panel below stays on ' + selectedRegion.name + '.'}
+                  </small>
+                </div>
                 <figcaption>
                   <MapPinned aria-hidden="true" size={18} />
-                  Community map of MLS’26 field locations
+                  Community map of MLS&rsquo;26 field locations
                 </figcaption>
               </motion.figure>
 
@@ -563,7 +676,11 @@ export function CobesExperiencePage() {
                   aria-controls={`region-${region.id}`}
                   aria-selected={selectedRegion.id === region.id}
                   className={selectedRegion.id === region.id ? 'is-active' : undefined}
-                  onClick={() => setSelectedRegionId(region.id)}
+                  onClick={() => {
+                    setSelectedRegionId(region.id);
+                    const mapLocation = fieldMapLocations.find((location) => location.assessmentRegionId === region.id);
+                    if (mapLocation) setSelectedMapLocationId(mapLocation.id);
+                  }}
                 >
                   {region.name}
                 </button>
@@ -599,7 +716,7 @@ export function CobesExperiencePage() {
             </AnimatePresence>
 
             <div className="cobes-assessment__bottom-grid">
-              <article className="cobes-data-visual-card">
+              <article id="cobes-assessment-data" className="cobes-data-visual-card">
                 <div className="cobes-data-visual-card__heading">
                   <div>
                     <p className="cobes-eyebrow">Assessment data</p>
@@ -651,7 +768,7 @@ export function CobesExperiencePage() {
                 </AnimatePresence>
               </article>
 
-              <article className="cobes-evidence-card cobes-distribution-tabs">
+              <article id="cobes-explore-data" className="cobes-evidence-card cobes-distribution-tabs">
                 <p className="cobes-eyebrow">Explore the data</p>
                 <p className="cobes-distribution-tabs__intro">
                   Select a category to view its distribution.
@@ -671,7 +788,10 @@ export function CobesExperiencePage() {
                       className={`cobes-distribution-tab ${
                         selectedDistribution.id === distribution.id ? 'is-active' : ''
                       }`}
-                      onClick={() => setSelectedDistributionId(distribution.id)}
+                      onClick={() => {
+                        setSelectedDistributionId(distribution.id);
+                        scrollToContent('cobes-assessment-data');
+                      }}
                     >
                       <span>{distribution.label}</span>
                       <ChevronRight aria-hidden="true" size={17} />
@@ -682,73 +802,11 @@ export function CobesExperiencePage() {
             </div>
           </div>
         </section>
+        )}
 
-        <section id="learning-experience" className="cobes-learning scroll-target" aria-labelledby="learning-heading">
-          <div className="cobes-container cobes-section-content">
-            <motion.div
-              className="cobes-section-heading cobes-section-heading--split"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.22 }}
-              variants={reveal}
-              transition={{ duration: 0.5, ease: 'easeOut' }}
-            >
-              <div>
-                <p className="cobes-eyebrow">Learning experience</p>
-                <h2 id="learning-heading">Fieldwork, made explorable.</h2>
-              </div>
-              <p>
-                Browse the practical learning moments that moved COBES from introduction to collaborative action.
-              </p>
-            </motion.div>
-
-            <div className="cobes-learning-row" aria-label="Learning experience cards">
-              {learningExperiences.map((experience, index) => (
-                <motion.button
-                  id={`learning-${experience.id}`}
-                  key={experience.id}
-                  type="button"
-                  className={`cobes-learning-card ${selectedLearning.id === experience.id ? 'is-active' : ''}`}
-                  onClick={() => setSelectedLearningId(experience.id)}
-                  initial={{ opacity: 0, y: 22 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.12 }}
-                  transition={{ duration: 0.42, delay: Math.min(index * 0.04, 0.2), ease: 'easeOut' }}
-                >
-                  <img src={experience.image} alt="" />
-                  <span className="cobes-learning-card__shade" />
-                  <span className="cobes-learning-card__meta">{experience.tag}</span>
-                  <strong>{experience.title}</strong>
-                  <span className="cobes-learning-card__arrow"><ArrowDownRight aria-hidden="true" size={19} /></span>
-                </motion.button>
-              ))}
-            </div>
-
-            <AnimatePresence mode="wait">
-              <motion.article
-                key={selectedLearning.id}
-                className="cobes-learning-feature"
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -16 }}
-                transition={{ duration: 0.26, ease: 'easeOut' }}
-              >
-                <img src={selectedLearning.image} alt="" />
-                <div>
-                  <p className="cobes-eyebrow">{selectedLearning.tag}</p>
-                  <h3>{selectedLearning.title}</h3>
-                  <p>{selectedLearning.description}</p>
-                  <div className="cobes-learning-feature__outcome">
-                    <CircleCheck aria-hidden="true" size={18} />
-                    <span>{selectedLearning.outcome}</span>
-                  </div>
-                </div>
-              </motion.article>
-            </AnimatePresence>
-          </div>
-        </section>
-
+        {page === 'project-journey' && (
         <section id="project-journey" className="cobes-journey scroll-target" aria-labelledby="journey-heading">
+          <SectionSlideshow slides={journeyBackdropSlides} />
           <div className="cobes-container cobes-section-content">
             <motion.div
               className="cobes-section-heading"
@@ -777,13 +835,20 @@ export function CobesExperiencePage() {
                   viewport={{ once: true, amount: 0.12 }}
                   transition={{ duration: 0.42, delay: Math.min(index * 0.035, 0.18), ease: 'easeOut' }}
                 >
-                  <button type="button" onClick={() => setSelectedJourneyId(stage.id)}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedJourneyId(stage.id);
+                      setJourneyModalId(stage.id);
+                    }}
+                  >
                     <span className="cobes-timeline__index">{String(index + 1).padStart(2, '0')}</span>
                     <span className="cobes-timeline__node" aria-hidden="true" />
                     <span className="cobes-timeline__content">
                       <small>{stage.label}</small>
                       <strong>{stage.title}</strong>
                       <span>{stage.detail}</span>
+                      <span className="cobes-timeline__open">View project details <ArrowRight size={15} aria-hidden="true" /></span>
                     </span>
                   </button>
                 </motion.li>
@@ -809,8 +874,11 @@ export function CobesExperiencePage() {
             </div>
           </div>
         </section>
+        )}
 
+        {page === 'team' && (
         <section id="team" className="cobes-team scroll-target" aria-labelledby="team-heading">
+          <SectionSlideshow slides={teamBackdropSlides} />
           <div className="cobes-container cobes-section-content">
             <motion.div
               className="cobes-section-heading cobes-section-heading--split"
@@ -825,65 +893,126 @@ export function CobesExperiencePage() {
                 <h2 id="team-heading">One team, many essential roles.</h2>
               </div>
               <p>
-                The team structure makes each strand of the work visible—from supervision and coordination
+                The team structure makes each strand of the work visibleâ€”from supervision and coordination
                 to community education, evidence, logistics, and technical documentation.
               </p>
             </motion.div>
 
             <div className="cobes-team__feature">
               <img src="/cobes-data/shao-imgs/shaonova-img.jpg" alt="Shaonova COBES student team" />
-              <div><p className="cobes-eyebrow">Shared purpose</p><h3>Healthcare learning that stays connected to people.</h3><p>Individual profiles can be added here after names, roles, photos, and publication consent are confirmed.</p></div>
+              <div>
+                <p className="cobes-eyebrow">Shared purpose</p>
+                <h3>Many roles. One community purpose.</h3>
+                <p>Meet the groups supporting the Shao COBES experience. Choose a team box to open its numbered roster.</p>
+              </div>
             </div>
 
-            <div className="cobes-team-grid">
+            <div className="cobes-team-grid" role="group" aria-label="Project team groups">
               {teamCategories.map((team) => (
                 <button
-                  id={`team-${team.id}`}
+                  id={'team-' + team.id}
                   type="button"
                   key={team.id}
-                  className={`cobes-team-card ${selectedTeamId === team.id ? 'is-active' : ''}`}
+                  className={'cobes-team-card ' + (selectedTeamId === team.id ? 'is-active' : '')}
+                  aria-haspopup="dialog"
+                  aria-expanded={selectedTeamId === team.id}
+                  aria-controls="team-roster-dialog"
                   onClick={() => setSelectedTeamId(team.id)}
                 >
-                  <span className="cobes-team-card__avatar" aria-hidden="true">{team.initials}</span>
-                  <span className="cobes-team-card__role">Project role</span>
+                  <span className="cobes-team-card__avatar" aria-hidden="true"><UsersRound size={20} strokeWidth={1.8} /></span>
                   <strong>{team.title}</strong>
-                  <span>{team.role}</span>
+                  <span className="cobes-team-card__description">{team.role}</span>
+                  <span className="cobes-team-card__count">{team.members.length} {team.members.length === 1 ? 'member' : 'members'}</span>
                   <ChevronRight aria-hidden="true" size={18} />
                 </button>
               ))}
             </div>
 
-            <div className="cobes-archive" aria-labelledby="archive-heading">
-              <div className="cobes-archive__heading">
+            <section className="cobes-team-others" aria-labelledby="team-others-heading">
+              <header className="cobes-team-others__header">
                 <div>
-                  <p className="cobes-eyebrow">Archive</p>
-                  <h3 id="archive-heading">Source materials and project records.</h3>
+                  <p className="cobes-eyebrow">Others</p>
+                  <h3 id="team-others-heading">What we do together.</h3>
                 </div>
-                <FileText aria-hidden="true" size={25} />
-              </div>
-              <div className="cobes-archive__grid">
-                {archiveItems.map((item) => (
-                  <a key={item.title} href={item.href} download className="cobes-archive-card">
-                    <span>{item.type}</span>
-                    <strong>{item.title}</strong>
-                    <p>{item.detail}</p>
-                    <b>Download <Download aria-hidden="true" size={15} /></b>
-                  </a>
+                <p>Shared moments from planning and community health activities.</p>
+              </header>
+              <div className="cobes-team-activities">
+                {teamActivities.map((activity) => (
+                  <article className="cobes-team-activity" key={activity.title}>
+                    <img src={activity.image} alt={activity.alt} loading="lazy" />
+                    <h4>{activity.title}</h4>
+                  </article>
                 ))}
               </div>
-            </div>
+            </section>
+
+            <AnimatePresence>
+              {selectedTeam && (
+                <motion.div
+                  className="cobes-modal-backdrop cobes-team-modal-backdrop"
+                  role="presentation"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onMouseDown={(event) => {
+                    if (event.target === event.currentTarget) setSelectedTeamId(null);
+                  }}
+                >
+                  <motion.section
+                    key={selectedTeam.id}
+                    id="team-roster-dialog"
+                    className="cobes-team-modal"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="team-roster-heading"
+                    initial={{ opacity: 0, y: 18, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 12, scale: 0.98 }}
+                    transition={{ duration: 0.22, ease: 'easeOut' }}
+                    onMouseDown={(event) => event.stopPropagation()}
+                  >
+                    <button
+                      type="button"
+                      className="cobes-modal__close"
+                      onClick={() => setSelectedTeamId(null)}
+                      aria-label="Close team members"
+                      autoFocus
+                    >
+                      <X aria-hidden="true" size={20} />
+                    </button>
+                    <header className="cobes-team-roster__header">
+                      <div>
+                        <p className="cobes-eyebrow">Team members</p>
+                        <h3 id="team-roster-heading">{selectedTeam.title}</h3>
+                      </div>
+                      <span>{selectedTeam.members.length} {selectedTeam.members.length === 1 ? 'person' : 'people'}</span>
+                    </header>
+                    <ol className="cobes-team-roster__list">
+                      {selectedTeam.members.map((member, index) => (
+                        <li key={member.name}>
+                          <span className="cobes-team-roster__number">{String(index + 1).padStart(2, '0')}</span>
+                          <strong>{member.name}</strong>
+                          {member.isLead && <span className="cobes-team-roster__lead">Team lead</span>}
+                        </li>
+                      ))}
+                    </ol>
+                  </motion.section>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </section>
+        )}
       </main>
 
       <footer className="cobes-footer">
         <div className="cobes-container">
           <div>
-            <p className="cobes-eyebrow">University of Ilorin · Department of Medical Laboratory Science</p>
+            <p className="cobes-eyebrow">University of Ilorin Â· Department of Medical Laboratory Science</p>
             <h2>COBES / Shao Community</h2>
           </div>
           <p>Together for health. Stand with science.</p>
-          <a href="#home">Back to top <ExternalLink aria-hidden="true" size={15} /></a>
+          <Link to="/">Back to home <ExternalLink aria-hidden="true" size={15} /></Link>
         </div>
       </footer>
 
@@ -911,7 +1040,7 @@ export function CobesExperiencePage() {
               <button type="button" className="cobes-modal__close" onClick={() => setModalOpen(false)} aria-label="Close assessment note">
                 <X aria-hidden="true" size={20} />
               </button>
-              <p className="cobes-eyebrow">Assessment note · {selectedRegion.name}</p>
+              <p className="cobes-eyebrow">Assessment note Â· {selectedRegion.name}</p>
               <h2 id="assessment-note-title">COMMUNITY MAPPING</h2>
               <div className="cobes-modal__content">
                 <h4 className="cobes-eyebrow">ROAD NETWORK AND TRANSPORTATION</h4>
@@ -981,6 +1110,52 @@ export function CobesExperiencePage() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <AnimatePresence>
+        {journeyModalStage && (
+          <motion.div
+            className="cobes-modal-backdrop cobes-journey-modal-backdrop"
+            role="presentation"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onMouseDown={() => setJourneyModalId(null)}
+          >
+            <motion.section
+              className="cobes-journey-modal"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="journey-modal-title"
+              initial={{ opacity: 0, y: 20, scale: 0.985 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 16, scale: 0.985 }}
+              transition={{ duration: 0.24, ease: 'easeOut' }}
+              onMouseDown={(event) => event.stopPropagation()}
+            >
+              <button type="button" className="cobes-modal__close" onClick={() => setJourneyModalId(null)} aria-label="Close project details">
+                <X aria-hidden="true" size={20} />
+              </button>
+              <div className="cobes-journey-modal__image">
+                <img src={journeyModalStage.image} alt={journeyModalStage.imageAlt} />
+                <span>{journeyModalStage.label}</span>
+              </div>
+              <div className="cobes-journey-modal__content">
+                <p className="cobes-eyebrow">Project journey Â· {journeyModalStage.label}</p>
+                <h2 id="journey-modal-title">{journeyModalStage.title}</h2>
+                <div>
+                  <h3>Project overview</h3>
+                  <p>{journeyModalStage.detail}</p>
+                </div>
+                <div>
+                  <h3>How it was carried out</h3>
+                  <p>{journeyModalStage.approach}</p>
+                </div>
+              </div>
+            </motion.section>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 }

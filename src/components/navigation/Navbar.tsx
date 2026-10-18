@@ -1,17 +1,18 @@
 import { Menu, Search, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { navigationItems, type SearchItem } from '../../data/cobesContent';
 
 type NavbarProps = {
-  searchItems: SearchItem[];
-  onSearchNavigate: (item: SearchItem) => void;
+  currentPage: string;
+  searchItems?: SearchItem[];
+  onSearchNavigate?: (item: SearchItem) => void;
 };
 
-export function Navbar({ searchItems, onSearchNavigate }: NavbarProps) {
+export function Navbar({ currentPage, searchItems = [], onSearchNavigate }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState('');
-  const [activeSection, setActiveSection] = useState('home');
   const [highlightedResult, setHighlightedResult] = useState(0);
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -25,25 +26,7 @@ export function Navbar({ searchItems, onSearchNavigate }: NavbarProps) {
       .slice(0, 8);
   }, [query, searchItems]);
 
-  useEffect(() => {
-    const updateActiveSection = () => {
-      const matching = [...navigationItems]
-        .map((item) => ({
-          target: item.target,
-          top: document.getElementById(item.target)?.getBoundingClientRect().top ?? Number.POSITIVE_INFINITY,
-        }))
-        .filter((item) => item.top <= window.innerHeight * 0.42);
-      setActiveSection(matching[matching.length - 1]?.target ?? 'home');
-    };
 
-    updateActiveSection();
-    window.addEventListener('scroll', updateActiveSection, { passive: true });
-    window.addEventListener('resize', updateActiveSection);
-    return () => {
-      window.removeEventListener('scroll', updateActiveSection);
-      window.removeEventListener('resize', updateActiveSection);
-    };
-  }, []);
 
   useEffect(() => {
     const closeOnOutsideClick = (event: MouseEvent) => {
@@ -63,7 +46,7 @@ export function Navbar({ searchItems, onSearchNavigate }: NavbarProps) {
   };
 
   const selectResult = (item: SearchItem) => {
-    onSearchNavigate(item);
+    onSearchNavigate?.(item);
     setQuery('');
     setSearchOpen(false);
     setMobileOpen(false);
@@ -91,22 +74,15 @@ export function Navbar({ searchItems, onSearchNavigate }: NavbarProps) {
   return (
     <header className="cobes-nav" aria-label="Primary navigation">
       <div className="cobes-nav__inner">
-        <div className="cobes-nav__brand" aria-label="Shaonova logo">
-          <img src="/cobes-data/shao-imgs/shaonova-logo.png" alt="Shaonova" />
-        </div>
+        <Link to="/" className="cobes-nav__brand" aria-label="Shaonova home"><img src="/cobes-data/shao-imgs/shaonova-logo.png" alt="Shaonova" /></Link>
 
         <nav className="cobes-nav__links" aria-label="Section navigation">
           {navigationItems.map((item) => (
-            <a
-              key={item.target}
-              href={`#${item.target}`}
-              className={activeSection === item.target ? 'is-active' : undefined}
-            >
-              {item.label}
-            </a>
+            <Link key={item.target} to={item.path} className={currentPage === item.target ? 'is-active' : undefined} aria-current={currentPage === item.target ? 'page' : undefined}>{item.label}</Link>
           ))}
         </nav>
 
+        {onSearchNavigate && (
         <div ref={searchRef} className={`cobes-search ${searchOpen ? 'is-open' : ''}`}>
           <button type="button" className="cobes-search__toggle" onClick={openSearch} aria-label="Search site content" aria-expanded={searchOpen}>
             <Search aria-hidden="true" size={18} />
@@ -152,6 +128,8 @@ export function Navbar({ searchItems, onSearchNavigate }: NavbarProps) {
           )}
         </div>
 
+        )}
+
         <button
           type="button"
           className="cobes-nav__menu-toggle"
@@ -166,9 +144,7 @@ export function Navbar({ searchItems, onSearchNavigate }: NavbarProps) {
       {mobileOpen && (
         <nav className="cobes-nav__mobile-links" aria-label="Mobile section navigation">
           {navigationItems.map((item) => (
-            <a key={item.target} href={`#${item.target}`} onClick={() => setMobileOpen(false)}>
-              {item.label}
-            </a>
+            <Link key={item.target} to={item.path} onClick={() => setMobileOpen(false)}>{item.label}</Link>
           ))}
         </nav>
       )}

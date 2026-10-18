@@ -1,7 +1,8 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowDownRight, ChevronRight, Play, Image as ImageIcon, Sparkles } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { ArrowDownRight, ArrowUp, ChevronRight, Play, Image as ImageIcon, Sparkles } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { mloItems, type MloContentBlock } from '../components/mloContent';
+import { getObjectiveThumbnail } from './objectiveMedia';
  
 const groupLabels = {
   general: 'General MLO',
@@ -43,11 +44,15 @@ function MediaBlock({ block }: { block: Extract<MloContentBlock, { kind: 'media'
  
 export function MloExplorer() {
   const [selectedMloId, setSelectedMloId] = useState(mloItems[0].id);
+  const [showBackToObjectives, setShowBackToObjectives] = useState(false);
+  const scrollTimer = useRef<number | undefined>(undefined);
   const selectedMlo = useMemo(
     () => mloItems.find((item) => item.id === selectedMloId) ?? mloItems[0],
     [selectedMloId],
   );
   const selectedIndex = mloItems.findIndex((item) => item.id === selectedMlo.id);
+
+  useEffect(() => () => window.clearTimeout(scrollTimer.current), []);
  
   return (
     <section id="learning-experience" className="cobes-mlo scroll-target" aria-labelledby="mlo-heading">
@@ -83,9 +88,16 @@ export function MloExplorer() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.08 }}
                 transition={{ duration: 0.38, delay: Math.min(index * 0.035, 0.22), ease: 'easeOut' }}
-                onClick={() => setSelectedMloId(item.id)}
+                onClick={() => {
+                  setSelectedMloId(item.id);
+                  setShowBackToObjectives(true);
+                  window.clearTimeout(scrollTimer.current);
+                  scrollTimer.current = window.setTimeout(() => {
+                    document.getElementById(`mlo-panel-${item.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }, 100);
+                }}
               >
-                <span className="cobes-mlo-card__number">{String(index + 1).padStart(2, '0')}</span>
+                <img className="cobes-mlo-card__image" src={getObjectiveThumbnail(item.id)} alt="" loading="lazy" />
                 <span className="cobes-mlo-card__type">{groupLabels[item.kind]}</span>
                 <strong>{item.title}</strong>
                 <span className="cobes-mlo-card__arrow" aria-hidden="true"><ArrowDownRight size={18} /></span>
@@ -133,6 +145,26 @@ export function MloExplorer() {
               <ChevronRight size={17} aria-hidden="true" />
               <span>Select another objective above to continue through the MLO record.</span>
             </footer>
+
+            <AnimatePresence>
+              {showBackToObjectives && (
+                <motion.button
+                  type="button"
+                  className="cobes-mlo-panel__back"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 8 }}
+                  transition={{ duration: 0.2, ease: 'easeOut' }}
+                  onClick={() => {
+                    setShowBackToObjectives(false);
+                    document.getElementById(`mlo-tab-${selectedMlo.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  }}
+                >
+                  <span className="cobes-mlo-panel__back-icon"><ArrowUp size={17} aria-hidden="true" /></span>
+                  <span><strong>Back to learning experience</strong><small>Return to {selectedMlo.title}</small></span>
+                </motion.button>
+              )}
+            </AnimatePresence>
           </motion.article>
         </AnimatePresence>
       </div>

@@ -343,19 +343,29 @@ img {
   position: absolute;
   z-index: -2;
   inset: 0;
-  background:
-    linear-gradient(90deg, rgba(10, 25, 47, 0.94) 0%, rgba(10, 25, 47, 0.82) 43%, rgba(10, 25, 47, 0.65) 100%),
-    linear-gradient(0deg, rgba(10, 25, 47, 0.72), rgba(10, 25, 47, 0.2)),
-    url('/cobes-data/shao-imgs/shaonova-img.jpg') center 39% / cover;
+  overflow: hidden;
+  background: var(--cobes-navy);
+}
+
+.cobes-hero__backdrop-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 39%;
 }
 
 .cobes-hero__backdrop::after {
   position: absolute;
   inset: 0;
   content: "";
-  background: radial-gradient(circle at 86% 26%, rgba(29, 185, 84, 0.24), transparent 22rem);
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(10, 25, 47, 0.92) 0%, rgba(10, 25, 47, 0.82) 42%, rgba(10, 25, 47, 0.48) 100%),
+    linear-gradient(0deg, rgba(10, 25, 47, 0.72), rgba(10, 25, 47, 0.2)),
+    radial-gradient(circle at 86% 26%, rgba(29, 185, 84, 0.2), transparent 22rem);
 }
-
 .cobes-hero__layout {
   display: grid;
   grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.56fr);
@@ -1613,14 +1623,15 @@ img {
 
 .cobes-team-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.75rem;
   margin-top: 1rem;
 }
 
 .cobes-team-card {
   position: relative;
-  min-height: 210px;
+  min-height: 175px;
+  aspect-ratio: 1.6 / 1;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -1687,7 +1698,9 @@ img {
   letter-spacing: -0.025em;
 }
 
-.cobes-team-card > span:last-of-type {
+.cobes-team-card__description,
+.cobes-team-card__count {
+  display: block;
   margin-top: 0.36rem;
   color: var(--cobes-muted);
   font-size: 0.74rem;
@@ -1698,6 +1711,97 @@ img {
   margin-top: auto;
   align-self: flex-end;
   color: var(--cobes-green);
+}
+
+
+.cobes-team-roster-prompt {
+  margin: 1.25rem 0 0;
+  padding: 1.1rem 1.25rem;
+  border: 1px dashed var(--cobes-border);
+  border-radius: 13px;
+  color: var(--cobes-muted);
+  font-size: .88rem;
+  text-align: center;
+}
+
+.cobes-team-roster {
+  margin-top: 1.25rem;
+  padding: clamp(1rem, 2.5vw, 1.6rem);
+  border: 1px solid var(--cobes-border);
+  border-radius: 16px;
+  background: var(--cobes-panel);
+}
+
+.cobes-team-roster__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.cobes-team-roster__header h3 {
+  margin: .25rem 0 0;
+  color: var(--cobes-text);
+  font-size: clamp(1.2rem, 2vw, 1.7rem);
+  letter-spacing: -.035em;
+}
+
+.cobes-team-roster__header > span {
+  flex: 0 0 auto;
+  padding: .45rem .7rem;
+  border: 1px solid var(--cobes-border);
+  border-radius: 999px;
+  color: var(--cobes-green);
+  font-size: .75rem;
+  font-weight: 750;
+}
+
+.cobes-team-roster__list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cobes-team-roster__list li {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  min-width: 0;
+  min-height: 52px;
+  padding: .7rem .8rem;
+  border: 1px solid var(--cobes-border);
+  border-radius: 10px;
+  background: var(--cobes-panel-raised);
+}
+
+.cobes-team-roster__number {
+  flex: 0 0 1.8rem;
+  color: var(--cobes-green);
+  font-size: .72rem;
+  font-weight: 850;
+  letter-spacing: .04em;
+}
+
+.cobes-team-roster__list strong {
+  color: var(--cobes-text);
+  font-size: .83rem;
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+.cobes-team-roster__lead {
+  flex: 0 0 auto;
+  margin-left: auto;
+  padding: .25rem .45rem;
+  border-radius: 999px;
+  background: rgba(29, 185, 84, .12);
+  color: var(--cobes-green);
+  font-size: .63rem;
+  font-weight: 800;
 }
 
 .cobes-archive {
@@ -1860,6 +1964,171 @@ img {
 .cobes-modal .cobes-button {
   margin-top: 1.5rem;
   cursor: pointer;
+}
+
+/* Visual thumbnails for learning objective cards */
+.cobes-mlo-card {
+  isolation: isolate;
+}
+
+.cobes-mlo-card__image {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 650ms cubic-bezier(.2, .7, .2, 1);
+}
+
+.cobes-mlo-card::before {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  content: "";
+  background: linear-gradient(100deg, rgba(10, 25, 47, .96) 0%, rgba(10, 25, 47, .78) 48%, rgba(10, 25, 47, .24) 100%);
+  pointer-events: none;
+}
+
+.cobes-mlo-card > :not(.cobes-mlo-card__image) {
+  z-index: 2;
+}
+
+.cobes-mlo-card:hover .cobes-mlo-card__image,
+.cobes-mlo-card.is-active .cobes-mlo-card__image {
+  transform: scale(1.055);
+}
+
+/* Project journey detail modal */
+.cobes-journey-modal-backdrop {
+  z-index: 101;
+}
+
+.cobes-journey-modal {
+  position: relative;
+  width: min(1060px, 100%);
+  max-height: min(840px, calc(100vh - 2.4rem));
+  display: grid;
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, .98fr);
+  overflow: hidden;
+  border: 1px solid var(--cobes-border);
+  border-radius: 22px;
+  background: var(--cobes-panel-raised);
+  box-shadow: 0 32px 90px rgba(3, 13, 27, .52);
+}
+
+.cobes-journey-modal__image {
+  position: relative;
+  min-height: 500px;
+  overflow: hidden;
+  background: var(--cobes-panel);
+}
+
+.cobes-journey-modal__image::after {
+  position: absolute;
+  inset: 35% 0 0;
+  content: "";
+  background: linear-gradient(transparent, rgba(3, 13, 27, .76));
+}
+
+.cobes-journey-modal__image img {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+  object-fit: cover;
+}
+
+.cobes-journey-modal__image > span {
+  position: absolute;
+  z-index: 1;
+  right: 1.6rem;
+  bottom: 1.5rem;
+  left: 1.6rem;
+  color: #fff;
+  font-size: .76rem;
+  font-weight: 800;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+
+.cobes-journey-modal__content {
+  display: grid;
+  align-content: start;
+  gap: 1.35rem;
+  overflow-y: auto;
+  padding: clamp(1.6rem, 4vw, 3rem);
+}
+
+.cobes-journey-modal__content > .cobes-eyebrow {
+  margin: 0;
+}
+
+.cobes-journey-modal__content h2 {
+  max-width: 12ch;
+  margin: -.55rem 0 0;
+  color: var(--cobes-text);
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  letter-spacing: -.055em;
+  line-height: 1.02;
+}
+
+.cobes-journey-modal__content h3 {
+  margin: 0 0 .45rem;
+  color: var(--cobes-green-hover);
+  font-size: .72rem;
+  font-weight: 850;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+
+.cobes-journey-modal__content p:not(.cobes-eyebrow) {
+  margin: 0;
+  color: var(--cobes-muted);
+  font-size: .93rem;
+  line-height: 1.78;
+}
+
+.cobes-journey-modal .cobes-modal__close {
+  z-index: 3;
+  top: 1rem;
+  right: 1rem;
+}
+
+.cobes-timeline__open {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: .4rem;
+  margin-top: .15rem;
+  color: var(--cobes-green-hover);
+  font-size: .72rem;
+  font-weight: 750;
+}
+
+@media (max-width: 800px) {
+  .cobes-journey-modal {
+    grid-template-columns: 1fr;
+    max-height: calc(100vh - 1.5rem);
+    overflow-y: auto;
+    border-radius: 18px;
+  }
+
+  .cobes-journey-modal__image {
+    min-height: 0;
+    height: clamp(210px, 34vh, 320px);
+  }
+
+  .cobes-journey-modal__content {
+    overflow: visible;
+    gap: 1.1rem;
+    padding: 1.4rem 1.3rem 1.7rem;
+  }
+
+  .cobes-journey-modal .cobes-modal__close {
+    top: .8rem;
+    right: .8rem;
+  }
 }
 
 @media (min-width: 981px) {
@@ -2248,8 +2517,211 @@ img {
   }
 }
 
+
+.cobes-objectives-page {
+  min-height: 100vh;
+  padding-top: 7.25rem;
+}
+
+.cobes-objectives-heading {
+  max-width: 820px;
+}
+
+.cobes-objectives-heading h1 {
+  margin: 0 0 1rem;
+  color: var(--cobes-text);
+  font-size: clamp(2.5rem, 5.5vw, 4.6rem);
+  font-weight: 780;
+  letter-spacing: -.055em;
+  line-height: 1;
+}
+
+.cobes-objectives-heading > p:last-child {
+  max-width: 720px;
+  margin: 0;
+  color: var(--cobes-muted);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.cobes-objective-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .7rem;
+  margin: 2rem 0 1.2rem;
+}
+
+.cobes-objective-tabs button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 48px;
+  padding: .65rem .9rem .65rem 1rem;
+  border: 1px solid var(--cobes-border);
+  border-radius: 12px;
+  background: var(--cobes-panel);
+  color: var(--cobes-muted);
+  font-size: .82rem;
+  font-weight: 750;
+  cursor: pointer;
+  transition: border-color .2s ease, color .2s ease, background .2s ease;
+}
+
+.cobes-objective-tabs button span {
+  display: inline-grid;
+  min-width: 27px;
+  height: 27px;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--cobes-panel-raised);
+  color: var(--cobes-green);
+  font-size: .76rem;
+}
+
+.cobes-objective-tabs button:hover,
+.cobes-objective-tabs button.is-active {
+  border-color: var(--cobes-green);
+  background: var(--cobes-panel-raised);
+  color: var(--cobes-text);
+}
+
+.cobes-objective-grid {
+  margin-top: 0;
+}
+
+.cobes-mlo-card:focus-visible {
+  outline: 3px solid #1ED760;
+  outline-offset: 3px;
+}
+
+.cobes-objective-back {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  margin-bottom: 1.2rem;
+  color: var(--cobes-green);
+  font-size: .85rem;
+  font-weight: 750;
+}
+
+.cobes-objective-back:hover {
+  color: var(--cobes-green-hover);
+}
+
+.cobes-objective-detail .cobes-mlo-panel__top h1 {
+  margin: .25rem 0 .75rem;
+  color: var(--cobes-text);
+  font-size: clamp(1.7rem, 3vw, 2.5rem);
+  line-height: 1.12;
+}
+
+.cobes-objective-not-found {
+  padding: clamp(1.5rem, 4vw, 3rem);
+}
+
+.cobes-objective-not-found h1 {
+  margin: .25rem 0 1.5rem;
+  color: var(--cobes-text);
+}
+
+.cobes-activity-video {
+  position: relative;
+  min-height: 300px;
+  margin: clamp(1rem, 3vw, 2rem);
+  overflow: hidden;
+  border: 1px solid var(--cobes-border);
+  border-radius: 16px;
+  background: #081426;
+}
+
+.cobes-activity-video img,
+.cobes-activity-video video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: .52;
+}
+
+.cobes-activity-video__overlay {
+  position: relative;
+  z-index: 1;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+  padding: 2rem;
+  background: linear-gradient(0deg, rgba(10, 25, 47, .82), rgba(10, 25, 47, .22));
+  text-align: center;
+}
+
+.cobes-activity-video__play {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  margin-bottom: .35rem;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,.55);
+  border-radius: 50%;
+  background: rgba(29,185,84,.92);
+  color: #081426;
+}
+
+.cobes-activity-video__overlay strong {
+  color: var(--cobes-text);
+  font-size: 1.05rem;
+}
+
+.cobes-activity-video__overlay span {
+  max-width: 500px;
+  color: var(--cobes-muted);
+  font-size: .84rem;
+  line-height: 1.6;
+}
+
+.cobes-objective-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 0 clamp(1rem, 3vw, 2rem) 1.5rem;
+}
+
+.cobes-objective-gallery figure {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--cobes-border);
+  border-radius: 14px;
+  background: var(--cobes-panel-raised);
+}
+
+.cobes-objective-gallery img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1.5 / 1;
+  object-fit: cover;
+}
+
+.cobes-objective-gallery figcaption {
+  padding: .75rem .85rem;
+  color: var(--cobes-muted);
+  font-size: .76rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 720px) {
+  .cobes-objective-gallery { grid-template-columns: 1fr; }
+  .cobes-activity-video,
+  .cobes-activity-video__overlay { min-height: 220px; }
+  .cobes-objective-tabs { display: grid; grid-template-columns: 1fr; }
+}
+
 /* =========================================================
-   MLO EXPLORER — SHA0 COBES PALETTE
+   MLO EXPLORER â€” SHA0 COBES PALETTE
    Inject once into index.css.
    Uses only the approved website colours:
    #0A192F #112240 #1B2A41 #1DB954 #1ED760
@@ -2265,18 +2737,19 @@ img {
 
 .cobes-mlo__grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.85rem;
   margin-top: 2rem;
 }
 
 .cobes-mlo-card {
   position: relative;
-  min-height: 150px;
+  min-height: 0;
+  aspect-ratio: 1.45 / 1;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 0.35rem;
   padding: 1.15rem;
   overflow: hidden;
@@ -2349,6 +2822,7 @@ img {
 
 .cobes-mlo-panel {
   margin-top: 1.8rem;
+  scroll-margin-top: 105px;
   overflow: hidden;
   border: 1px solid #233554;
   border-radius: 22px;
@@ -2501,14 +2975,67 @@ img {
 
 .cobes-mlo-panel__footer svg { color: #1DB954; flex: 0 0 auto; }
 
+.cobes-mlo-panel__back {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  margin: 0 clamp(1rem, 3vw, 2rem) 1.35rem auto;
+  padding: .75rem 1rem .75rem .75rem;
+  border: 1px solid rgba(29, 185, 84, .38);
+  border-radius: 13px;
+  background: linear-gradient(135deg, rgba(29, 185, 84, .13), rgba(17, 34, 64, .94) 65%);
+  color: #FFFFFF;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .16);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+
+.cobes-mlo-panel__back:hover {
+  transform: translateY(-2px);
+  border-color: #1DB954;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, .24);
+}
+
+.cobes-mlo-panel__back-icon {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  place-items: center;
+  border: 1px solid rgba(29, 185, 84, .34);
+  border-radius: 10px;
+  background: rgba(29, 185, 84, .12);
+  color: #1ED760;
+}
+
+.cobes-mlo-panel__back > span:last-child {
+  display: grid;
+  gap: .14rem;
+}
+
+.cobes-mlo-panel__back strong {
+  font-size: .79rem;
+  line-height: 1.2;
+}
+
+.cobes-mlo-panel__back small {
+  color: #A8B2D1;
+  font-size: .69rem;
+}
+
+.cobes-mlo:not(.cobes-objectives-page) .cobes-mlo-card {
+  aspect-ratio: 1.68 / 1;
+}
+
 @media (max-width: 980px) {
-  .cobes-mlo__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .cobes-mlo__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 720px) {
   .cobes-mlo { padding: 4rem 0; }
   .cobes-mlo__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; }
-  .cobes-mlo-card { min-height: 132px; padding: 1rem; border-radius: 14px; }
+  .cobes-mlo-card { aspect-ratio: 1.35 / 1; padding: 1rem; border-radius: 14px; }
   .cobes-mlo-card strong { font-size: 1rem; }
   .cobes-mlo-panel__top { flex-direction: column; gap: 1rem; }
   .cobes-mlo-panel__badge { align-self: flex-start; }
@@ -2517,10 +3044,1044 @@ img {
 
 @media (max-width: 460px) {
   .cobes-mlo__grid { grid-template-columns: 1fr; }
-  .cobes-mlo-card { min-height: 112px; }
+  .cobes-mlo-card { aspect-ratio: 1.45 / 1; }
   .cobes-mlo-card strong { font-size: .98rem; }
   .cobes-mlo-panel { border-radius: 16px; }
   .cobes-mlo-panel__top,
   .cobes-mlo-panel__flow { padding: 1rem; }
   .cobes-mlo-note-section p { font-size: .9rem; line-height: 1.78; }
+}
+
+@media (max-width: 520px) {
+  .cobes-mlo-panel__back {
+    width: calc(100% - 2rem);
+    justify-content: flex-start;
+    margin: 0 1rem 1rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .cobes-team-roster__list { grid-template-columns: 1fr; }
+  .cobes-team-card { aspect-ratio: auto; }
+}
+
+/* Photo led backgrounds and experience gallery */
+.cobes-journey,
+.cobes-team,
+.cobes-objectives-page {
+  position: relative;
+  isolation: isolate;
+}
+
+.cobes-section-slideshow {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.cobes-section-slideshow__image,
+.cobes-section-slideshow__scrim {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.cobes-section-slideshow__image {
+  object-fit: cover;
+  object-position: center;
+}
+
+.cobes-section-slideshow__scrim {
+  background:
+    linear-gradient(90deg, rgba(5, 17, 34, .92), rgba(5, 17, 34, .78) 52%, rgba(5, 17, 34, .89)),
+    linear-gradient(0deg, rgba(5, 17, 34, .55), rgba(5, 17, 34, .3));
+}
+
+.cobes-journey > .cobes-container.cobes-section-content,
+.cobes-team > .cobes-container.cobes-section-content,
+.cobes-objectives-page > .cobes-container.cobes-section-content {
+  position: relative;
+  z-index: 1;
+}
+
+.cobes-learning-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-columns: unset;
+  grid-auto-flow: row;
+  gap: 1rem;
+  margin: 2.2rem 0 0;
+  padding: 0;
+  overflow: visible;
+}
+
+.cobes-learning-card {
+  min-width: 0;
+  min-height: 220px;
+  aspect-ratio: 1.35 / 1;
+  border-radius: 16px;
+}
+
+.cobes-learning-modal-backdrop {
+  position: fixed;
+  z-index: 120;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow-y: auto;
+  padding: clamp(.75rem, 3vw, 2rem);
+  background: rgba(2, 10, 22, .82);
+  backdrop-filter: blur(12px);
+}
+
+.cobes-learning-modal {
+  position: relative;
+  width: min(980px, 100%);
+  max-height: min(900px, calc(100vh - 2rem));
+  overflow-y: auto;
+  border: 1px solid var(--cobes-border);
+  border-radius: 22px;
+  background: var(--cobes-panel-raised);
+  box-shadow: 0 32px 90px rgba(3, 13, 27, .58);
+}
+
+.cobes-learning-modal .cobes-modal__close {
+  z-index: 2;
+  top: 1rem;
+  right: 1rem;
+  border-color: rgba(255, 255, 255, .28);
+  background: rgba(5, 17, 34, .76);
+  color: #fff;
+  backdrop-filter: blur(10px);
+}
+
+.cobes-learning-modal__gallery {
+  display: grid;
+  height: clamp(290px, 42vw, 440px);
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: .55rem;
+  padding: .65rem;
+}
+
+.cobes-learning-modal__gallery figure {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  margin: 0;
+  border-radius: 13px;
+  background: var(--cobes-panel);
+}
+
+.cobes-learning-modal__gallery figure:first-child {
+  grid-column: 1;
+  grid-row: 1 / 3;
+}
+
+.cobes-learning-modal__gallery figure:nth-child(2) {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.cobes-learning-modal__gallery figure:nth-child(3) {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.cobes-learning-modal__gallery img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cobes-learning-modal__gallery figcaption {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 2.4rem .85rem .75rem;
+  background: linear-gradient(transparent, rgba(3, 13, 27, .78));
+  color: #fff;
+  font-size: .7rem;
+  font-weight: 700;
+}
+
+.cobes-learning-modal__content {
+  padding: .6rem clamp(1.25rem, 3vw, 2.1rem) 1.8rem;
+}
+
+.cobes-learning-modal__content > .cobes-eyebrow {
+  margin: 0 0 .55rem;
+}
+
+.cobes-learning-modal__content h2 {
+  margin: 0;
+  color: var(--cobes-text);
+  font-size: clamp(1.8rem, 4vw, 2.7rem);
+  letter-spacing: -.045em;
+  line-height: 1.08;
+}
+
+.cobes-learning-modal__content > p:not(.cobes-eyebrow) {
+  max-width: 720px;
+  margin: .75rem 0 0;
+  color: var(--cobes-muted);
+  font-size: .94rem;
+  line-height: 1.65;
+}
+
+@media (max-width: 760px) {
+  .cobes-learning-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .cobes-learning-card {
+    min-height: 205px;
+  }
+
+  .cobes-learning-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 560px) {
+  .cobes-learning-row {
+    grid-template-columns: 1fr;
+  }
+
+  .cobes-learning-card,
+  .cobes-learning-card:last-child:nth-child(odd) {
+    min-height: 210px;
+    aspect-ratio: 1.5 / 1;
+    grid-column: auto;
+  }
+
+  .cobes-learning-modal-backdrop {
+    align-items: end;
+    padding: .55rem;
+  }
+
+  .cobes-learning-modal {
+    max-height: calc(100vh - 1.1rem);
+    border-radius: 18px;
+  }
+
+  .cobes-learning-modal__gallery {
+    height: clamp(260px, 68vw, 340px);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: minmax(145px, 1.2fr) minmax(100px, .8fr);
+    gap: .4rem;
+    padding: .45rem;
+  }
+
+  .cobes-learning-modal__gallery figure:first-child {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  .cobes-learning-modal__gallery figure:nth-child(2) {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .cobes-learning-modal__gallery figure:nth-child(3) {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .cobes-learning-modal__gallery figcaption {
+    padding: 1.8rem .55rem .5rem;
+    font-size: .62rem;
+  }
+
+  .cobes-learning-modal__content {
+    padding: .45rem 1rem 1.15rem;
+  }
+
+  .cobes-learning-modal .cobes-modal__close {
+    top: .8rem;
+    right: .8rem;
+  }
+}
+
+/* Clearer, slower section photos and the orbitable field map */
+.cobes-section-slideshow__image {
+  object-fit: cover;
+  object-position: center 45%;
+  image-rendering: auto;
+  filter: saturate(.96) contrast(1.06);
+  will-change: opacity, transform;
+}
+
+.cobes-section-slideshow__scrim {
+  background:
+    linear-gradient(90deg, rgba(5, 17, 34, .76), rgba(5, 17, 34, .58) 52%, rgba(5, 17, 34, .73)),
+    linear-gradient(0deg, rgba(5, 17, 34, .42), rgba(5, 17, 34, .22));
+}
+
+.cobes-map-card--interactive {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.cobes-map-stage {
+  position: relative;
+  height: clamp(330px, 36vw, 470px);
+  min-height: 330px;
+  overflow: hidden;
+  border-radius: 15px 15px 0 0;
+  background:
+    radial-gradient(ellipse at 50% 45%, rgba(29, 185, 84, .13), transparent 62%),
+    #071b18;
+  touch-action: none;
+}
+
+.cobes-field-map-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  touch-action: none;
+}
+
+.cobes-field-map-canvas:active {
+  cursor: grabbing;
+}
+
+.cobes-map-region-tag {
+  display: inline-flex;
+  min-height: 27px;
+  align-items: center;
+  justify-content: center;
+  gap: .32rem;
+  padding: .36rem .55rem;
+  border: 1px solid rgba(117, 240, 169, .62);
+  border-radius: 999px;
+  background: rgba(4, 27, 20, .94);
+  box-shadow: 0 5px 14px rgba(0, 0, 0, .42);
+  color: #edfff4;
+  font: 750 clamp(8px, .68vw, 10px)/1.05 Inter, ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: .045em;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background .2s ease, color .2s ease, border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+  animation: cobes-map-tag-bob 4.2s ease-in-out infinite;
+}
+
+.cobes-map-region-tag:hover,
+.cobes-map-region-tag.is-active {
+  transform: translateY(-2px) scale(1.035);
+  border-color: #a8ffd0;
+  background: #147844;
+  color: #fff;
+  box-shadow: 0 0 0 3px rgba(53, 220, 127, .18), 0 8px 20px rgba(0, 0, 0, .46);
+}
+
+.cobes-map-region-tag:focus-visible {
+  outline: 2px solid #d8ffe8;
+  outline-offset: 3px;
+}
+
+.cobes-map-region-tag__dot {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #67f0a2;
+  box-shadow: 0 0 9px rgba(103, 240, 162, .85);
+}
+
+.cobes-map-instructions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: .45rem .8rem;
+  padding: .72rem 1rem .25rem;
+  color: var(--cobes-muted);
+  font-size: .68rem;
+  font-weight: 680;
+}
+
+.cobes-map-instructions span {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+}
+
+.cobes-map-instructions span::before {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cobes-green);
+  content: "";
+}
+
+.cobes-map-selection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .8rem;
+  margin: .3rem .8rem .7rem;
+  padding: .72rem .85rem;
+  border: 1px solid rgba(79, 205, 129, .24);
+  border-radius: 11px;
+  background: rgba(13, 44, 34, .72);
+}
+
+.cobes-map-selection > div {
+  display: grid;
+  gap: .14rem;
+}
+
+.cobes-map-selection > div span {
+  color: var(--cobes-muted);
+  font-size: .6rem;
+  font-weight: 750;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.cobes-map-selection strong {
+  color: #dfffea;
+  font-size: .84rem;
+  letter-spacing: .04em;
+}
+
+.cobes-map-selection small {
+  max-width: 55%;
+  color: var(--cobes-muted);
+  font-size: .64rem;
+  line-height: 1.45;
+  text-align: right;
+}
+
+.cobes-map-card--interactive figcaption {
+  min-height: 44px;
+  padding: .65rem .9rem;
+}
+
+@keyframes cobes-map-tag-bob {
+  0%, 100% { margin-top: 0; }
+  50% { margin-top: -2px; }
+}
+
+@media (max-width: 820px) {
+  .cobes-map-stage {
+    height: clamp(280px, 76vw, 360px);
+    min-height: 280px;
+  }
+}
+
+@media (max-width: 520px) {
+  .cobes-map-stage {
+    height: 285px;
+    min-height: 285px;
+  }
+
+  .cobes-map-selection {
+    align-items: flex-start;
+  }
+
+  .cobes-map-selection small {
+    max-width: 58%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cobes-map-region-tag {
+    animation: none;
+  }
+}
+
+.cobes-map-loading {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  min-height: 330px;
+  place-items: center;
+  color: #c6f6d8;
+  font-size: .86rem;
+  font-weight: 700;
+}
+
+/* The 3D field model is a landscape, with its legend kept outside the terrain. */
+.cobes-map-stage {
+  height: clamp(360px, 42vw, 520px);
+  min-height: 360px;
+  background:
+    radial-gradient(ellipse at 48% 34%, rgba(105, 139, 83, .24), transparent 56%),
+    linear-gradient(180deg, #253a30 0%, #18271f 62%, #101c17 100%);
+}
+
+.cobes-map-key {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .42rem .8rem;
+  padding: .72rem .95rem .24rem;
+  color: #bfd0c2;
+  font-size: .64rem;
+  font-weight: 650;
+}
+
+.cobes-map-key > span:not(.cobes-map-key__title) {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  white-space: nowrap;
+}
+
+.cobes-map-key__title {
+  color: #e1f3e6;
+  font-size: .61rem;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.cobes-map-key__mark {
+  display: inline-grid;
+  width: 17px;
+  height: 17px;
+  place-items: center;
+  border: 1px solid rgba(228, 243, 232, .35);
+  border-radius: 5px;
+  background: rgba(232, 239, 222, .11);
+  color: #f3f7e7;
+  font-size: .57rem;
+  font-style: normal;
+  font-weight: 850;
+  line-height: 1;
+}
+
+.cobes-map-key__mark.is-mosque { color: #a7e3b7; }
+.cobes-map-key__mark.is-church { color: #fff0c2; }
+.cobes-map-key__mark.is-palace { color: #e5c88f; }
+.cobes-map-key__mark.is-health { color: #f0aaa0; }
+.cobes-map-key__mark.is-outreach { color: #b8d7f2; }
+.cobes-map-key__mark.is-project { color: #91e0a9; }
+.cobes-map-key__mark.is-mapping { color: #bdf3cf; }
+
+.cobes-map-source-note {
+  margin: .28rem .95rem .2rem;
+  color: rgba(191, 208, 194, .76);
+  font-size: .61rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 820px) {
+  .cobes-map-stage {
+    height: clamp(300px, 62vw, 390px);
+    min-height: 300px;
+  }
+
+  .cobes-map-key {
+    gap: .38rem .62rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .cobes-map-stage {
+    height: 295px;
+    min-height: 295px;
+  }
+}
+
+/* Wide, source-faithful relief map with its legend and selection details below. */
+.cobes-assessment__overview {
+  display: block;
+}
+
+.cobes-map-card--interactive {
+  width: min(1700px, 100vw);
+  margin-left: calc((100% - min(1700px, 100vw)) / 2);
+  overflow: hidden;
+  border: 1px solid rgba(190, 164, 112, .38);
+  border-radius: 18px;
+  background: rgba(13, 31, 45, .18);
+  box-shadow: 0 24px 68px rgba(0, 0, 0, .2);
+}
+
+.cobes-map-stage {
+  height: clamp(440px, 48vw, 740px);
+  min-height: 440px;
+  border-radius: 17px 17px 0 0;
+  background: radial-gradient(ellipse at 50% 45%, rgba(48, 72, 70, .08), rgba(12, 27, 41, .1) 76%, transparent);
+  touch-action: none;
+}
+
+.cobes-map-card--interactive .cobes-map-key {
+  gap: .5rem 1rem;
+  padding: .85rem 1.1rem .3rem;
+  color: #d2d6d0;
+}
+
+.cobes-map-card--interactive .cobes-map-key__title {
+  color: #f0e7d4;
+}
+
+.cobes-map-card--interactive .cobes-map-key__mark {
+  border-color: rgba(208, 193, 159, .24);
+  background: rgba(22, 43, 55, .74);
+  color: #dce1dc;
+}
+
+.cobes-map-card--interactive .cobes-map-key__mark.is-mosque { color: #a7c4aa; }
+.cobes-map-card--interactive .cobes-map-key__mark.is-church { color: #c7a67c; }
+.cobes-map-card--interactive .cobes-map-key__mark.is-palace { color: #d4b66f; }
+.cobes-map-card--interactive .cobes-map-key__mark.is-health { color: #d58f82; }
+.cobes-map-card--interactive .cobes-map-key__mark.is-outreach { color: #a5c0d2; }
+.cobes-map-card--interactive .cobes-map-key__mark.is-project { color: #a3b999; }
+.cobes-map-card--interactive .cobes-map-key__mark.is-mapping { color: #afc4c5; }
+
+.cobes-map-region-tag {
+  position: relative;
+  min-height: 24px;
+  gap: .3rem;
+  padding: .31rem .46rem;
+  border-color: rgba(190, 164, 112, .56);
+  background: rgba(16, 34, 48, .96);
+  box-shadow: 0 4px 12px rgba(4, 13, 22, .38);
+  color: #f4eddb;
+  font-size: clamp(7px, .57vw, 8px);
+  letter-spacing: .045em;
+  white-space: nowrap;
+  animation: none;
+}
+
+.cobes-map-region-tag::before,
+.cobes-map-landmark-tag::before {
+  position: absolute;
+  top: 50%;
+  width: 11px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(197, 165, 104, .05), rgba(197, 165, 104, .85));
+  content: '';
+  transform: translateY(-50%);
+}
+
+.cobes-map-region-tag--east::before,
+.cobes-map-landmark-tag--east::before {
+  left: -11px;
+}
+
+.cobes-map-region-tag--west::before,
+.cobes-map-landmark-tag--west::before {
+  right: -11px;
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.cobes-map-region-tag:hover,
+.cobes-map-region-tag.is-active {
+  transform: translateY(-1px);
+  border-color: #d3b376;
+  background: #8e7044;
+  color: #fffaf0;
+  box-shadow: 0 0 0 2px rgba(178, 143, 82, .18), 0 5px 12px rgba(4, 13, 22, .4);
+}
+
+.cobes-map-landmark-tag {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 19px;
+  padding: .25rem .38rem;
+  border: 1px solid rgba(190, 164, 112, .42);
+  border-radius: 999px;
+  background: rgba(15, 33, 47, .94);
+  box-shadow: 0 3px 10px rgba(4, 13, 22, .34);
+  color: #e9e3d4;
+  font: 600 6.5px/1.1 Inter, ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: .035em;
+  white-space: nowrap;
+}
+
+.cobes-map-region-tag__dot {
+  width: 5px;
+  height: 5px;
+  background: #d1b174;
+  box-shadow: none;
+}
+
+.cobes-map-instructions {
+  padding: .68rem 1rem .18rem;
+  color: #c0c9c9;
+}
+
+.cobes-map-instructions span::before {
+  background: #c0a36d;
+}
+
+.cobes-map-selection {
+  margin: .3rem .85rem .75rem;
+  border-color: rgba(190, 164, 112, .22);
+  background: rgba(14, 31, 45, .68);
+}
+
+.cobes-map-selection > div span,
+.cobes-map-selection small {
+  color: #c2c9c5;
+}
+
+.cobes-map-selection strong {
+  color: #f0e7d4;
+}
+
+.cobes-map-card--interactive .cobes-map-source-note {
+  margin: .28rem 1rem .2rem;
+  color: #aeb9b8;
+}
+
+.cobes-map-card--interactive figcaption {
+  min-height: 45px;
+  border-top: 1px solid rgba(190, 164, 112, .2);
+  background: rgba(12, 28, 42, .68);
+  color: #d5d6cf;
+}
+
+.cobes-map-card--interactive figcaption svg {
+  color: #a17d44;
+}
+
+.cobes-assessment__note {
+  display: grid;
+  grid-template-columns: minmax(175px, .7fr) minmax(250px, 1.1fr) auto;
+  align-items: center;
+  gap: .22rem 1.25rem;
+  margin-top: 1rem;
+  padding: 1rem 1.25rem;
+  border-color: rgba(224, 234, 225, .15);
+  background: rgba(11, 27, 46, .79);
+}
+
+.cobes-assessment__note .cobes-eyebrow {
+  grid-column: 1;
+  grid-row: 1;
+  margin: 0;
+  font-size: .58rem;
+}
+
+.cobes-assessment__note h3 {
+  grid-column: 1;
+  grid-row: 2;
+  font-size: clamp(1.1rem, 1.7vw, 1.42rem);
+  line-height: 1.16;
+}
+
+.cobes-assessment__note > p:not(.cobes-eyebrow) {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  margin: 0;
+  font-size: .75rem;
+  line-height: 1.55;
+}
+
+.cobes-assessment__note dl {
+  grid-column: 3;
+  grid-row: 1 / span 2;
+  gap: .7rem;
+  margin: 0;
+  padding: 0 0 0 1rem;
+  border-top: 0;
+  border-left: 1px solid var(--cobes-border);
+}
+
+.cobes-assessment__note dt {
+  font-size: 1rem;
+}
+
+.cobes-assessment__note dd {
+  font-size: .52rem;
+}
+
+.cobes-map-loading {
+  color: #e1e7dd;
+}
+
+@media (max-width: 820px) {
+  .cobes-map-stage {
+    height: clamp(370px, 70vw, 530px);
+    min-height: 370px;
+  }
+
+  .cobes-assessment__note {
+    grid-template-columns: minmax(150px, .7fr) minmax(180px, 1fr);
+    gap: .45rem 1rem;
+  }
+
+  .cobes-assessment__note dl {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    padding: .7rem 0 0;
+    border-top: 1px solid var(--cobes-border);
+    border-left: 0;
+  }
+}
+
+@media (max-width: 520px) {
+  .cobes-map-card--interactive {
+    width: calc(100vw - 1rem);
+    margin-left: calc((100% - (100vw - 1rem)) / 2);
+    border-radius: 14px;
+  }
+
+  .cobes-map-stage {
+    height: 330px;
+    min-height: 330px;
+    border-radius: 13px 13px 0 0;
+  }
+
+  .cobes-map-region-tag {
+    min-height: 22px;
+    padding: .24rem .32rem;
+    font-size: 6px;
+  }
+
+  .cobes-map-landmark-tag {
+    min-height: 17px;
+    padding: .2rem .3rem;
+    font-size: 5.5px;
+  }
+
+  .cobes-map-selection {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .cobes-map-selection small {
+    max-width: 100%;
+    text-align: left;
+  }
+
+  .cobes-assessment__note {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .cobes-assessment__note .cobes-eyebrow,
+  .cobes-assessment__note h3,
+  .cobes-assessment__note > p:not(.cobes-eyebrow),
+  .cobes-assessment__note dl {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .cobes-assessment__note dl {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+
+/* Team rosters open in a focused dialog; shared activity photos stay in the section. */
+.cobes-team-card__avatar {
+  border: 1px solid rgba(29, 185, 84, .2);
+}
+
+.cobes-team-card__avatar svg {
+  color: var(--cobes-green-hover);
+}
+
+.cobes-team-card strong {
+  margin-top: .8rem;
+}
+
+.cobes-team-modal-backdrop {
+  z-index: 102;
+}
+
+.cobes-team-modal {
+  position: relative;
+  width: min(820px, 100%);
+  max-height: min(780px, calc(100vh - 2rem));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  border: 1px solid var(--cobes-border);
+  border-radius: 20px;
+  background: var(--cobes-panel-raised);
+  box-shadow: 0 32px 90px rgba(3, 13, 27, .56);
+}
+
+.cobes-team-modal .cobes-team-roster__header {
+  flex: 0 0 auto;
+  margin: 0 2.6rem 1.15rem 0;
+}
+
+.cobes-team-modal .cobes-team-roster__header h3 {
+  font-size: clamp(1.45rem, 3vw, 2.15rem);
+}
+
+.cobes-team-modal .cobes-team-roster__list {
+  min-height: 0;
+  overflow-y: auto;
+  padding: .1rem .35rem .25rem .1rem;
+  overscroll-behavior: contain;
+}
+
+.cobes-team-others {
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.cobes-team-others__header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.cobes-team-others__header .cobes-eyebrow {
+  margin-bottom: .35rem;
+}
+
+.cobes-team-others__header h3 {
+  margin: 0;
+  color: var(--cobes-text);
+  font-size: clamp(1.45rem, 2.8vw, 2.15rem);
+  letter-spacing: -.045em;
+}
+
+.cobes-team-others__header > p {
+  max-width: 380px;
+  margin: 0;
+  color: var(--cobes-muted);
+  font-size: .84rem;
+  line-height: 1.55;
+}
+
+.cobes-team-activities {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .9rem;
+}
+
+.cobes-team-activity {
+  overflow: hidden;
+  border: 1px solid var(--cobes-border);
+  border-radius: 15px;
+  background: rgba(13, 28, 46, .88);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, .18);
+}
+
+.cobes-team-activity img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1.65 / 1;
+  object-fit: cover;
+}
+
+.cobes-team-activity h4 {
+  margin: 0;
+  padding: .9rem 1rem 1rem;
+  color: var(--cobes-text);
+  font-size: .94rem;
+  font-weight: 750;
+  letter-spacing: -.015em;
+}
+
+@media (max-width: 600px) {
+  .cobes-team-others__header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: .55rem;
+  }
+
+  .cobes-team-activities {
+    grid-template-columns: 1fr;
+  }
+
+  .cobes-team-modal {
+    max-height: calc(100vh - 1.2rem);
+    padding: 1rem;
+    border-radius: 16px;
+  }
+
+  .cobes-team-modal .cobes-team-roster__header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: .65rem;
+  }
+}
+
+/* A larger, fixed-scale terrain view with floating region and road labels. */
+.cobes-map-stage {
+  height: clamp(520px, 56vw, 960px);
+  min-height: 520px;
+  touch-action: none;
+}
+
+.cobes-field-map-canvas {
+  touch-action: none;
+}
+
+.cobes-map-region-tag {
+  z-index: 10;
+}
+
+.cobes-map-region-tag:hover,
+.cobes-map-region-tag:focus-visible,
+.cobes-map-region-tag.is-active {
+  z-index: 50;
+}
+
+.cobes-map-region-tag__preview {
+  position: absolute;
+  z-index: 55;
+  top: calc(100% + .55rem);
+  left: 50%;
+  width: 112px;
+  height: 78px;
+  border: 1px solid rgba(198, 167, 105, .76);
+  border-radius: 12px 12px 5px 12px;
+  background-color: #495542;
+  background-image: url('/cobes-data/shao-imgs/Shao-map.png');
+  background-repeat: no-repeat;
+  background-size: 300% 300%;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, .5);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 6px);
+  transition: opacity .16s ease, transform .16s ease, visibility .16s ease;
+  visibility: hidden;
+}
+
+.cobes-map-region-tag:hover .cobes-map-region-tag__preview,
+.cobes-map-region-tag:focus-visible .cobes-map-region-tag__preview {
+  opacity: 1;
+  transform: translate(-50%, 0);
+  visibility: visible;
+}
+
+.cobes-map-road-label {
+  display: inline-flex;
+  align-items: center;
+  padding: .25rem .42rem;
+  border: 1px solid rgba(195, 160, 98, .52);
+  border-radius: 5px 9px 5px 9px;
+  background: rgba(28, 37, 30, .84);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, .35);
+  color: #eee4cc;
+  font: 750 7px/1 Inter, ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: .1em;
+  white-space: nowrap;
+}
+
+@media (max-width: 820px) {
+  .cobes-map-stage {
+    height: clamp(350px, 70vw, 560px);
+    min-height: 350px;
+  }
+}
+
+@media (max-width: 520px) {
+  .cobes-map-stage {
+    height: 340px;
+    min-height: 340px;
+  }
 }

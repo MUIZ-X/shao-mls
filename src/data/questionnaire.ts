@@ -1,4 +1,3 @@
-import * as XLSX from 'xlsx';
 import { canonicalRegions, type CanonicalRegion } from './projectData';
 
 export type QuestionnaireRow = Record<string, string> & {
@@ -37,19 +36,9 @@ export function questionnaireFields(rows: QuestionnaireRow[]) {
   return rows.length ? Object.keys(rows[0]).filter((field) => !excludedQuestionnaireFields.has(field) && field !== 'normalizedRegion' && field !== 'regionStatus') : [];
 }
 
-export async function loadQuestionnaire() {
-  const response = await fetch('/cobes-data/SHAONOVA%20QUEST%20RESPONSES.xlsx');
-  if (!response.ok) throw new Error('Questionnaire workbook could not be loaded.');
-  const workbook = XLSX.read(await response.arrayBuffer(), { type: 'array' });
-  const sheet = workbook.Sheets[workbook.SheetNames[0]];
-  const raw = XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet, { defval: '' });
-  return raw.map((source) => {
-    const row = Object.fromEntries(Object.entries(source).map(([key, value]) => [key, String(value).trim()]));
-    const normalizedRegion = normalizeRegion(row['REGION OF COLLECTION OF DATA']);
-    return { ...row, normalizedRegion, regionStatus: normalizedRegion ? 'mapped' : 'unmapped' };
-  }) as QuestionnaireRow[];
+export async function loadQuestionnaire(): Promise<QuestionnaireRow[]> {
+  throw new Error('Respondent-level questionnaire data is kept in private project records and is not published on this website.');
 }
-
 export function responseDistribution(rows: QuestionnaireRow[], field: string, region?: CanonicalRegion) {
   const values = rows
     .filter((row) => !region || row.normalizedRegion === region)

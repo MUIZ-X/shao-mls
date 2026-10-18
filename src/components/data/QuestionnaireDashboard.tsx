@@ -16,8 +16,8 @@ export function QuestionnaireDashboard() {
   const maximum = distribution[0]?.value ?? 1;
   const mapped = rows.filter((row) => row.regionStatus === 'mapped').length;
   return <section id="assessment" className="section-shell py-20">
-    <div className="split-heading"><div><div className="eyebrow">Community assessment dashboard</div><h1>Evidence, held to a higher standard.</h1></div><p className="lede">Responses are loaded from the supplied questionnaire workbook in the browser. Public respondent totals remain intentionally unpublished pending record-count verification.</p></div>
-    <div className="quality-notice"><strong>Data quality notice</strong><span>{dataQualityNotice}</span><small>Project report: 355 collated questionnaires · Current spreadsheet: 436 response rows</small></div>
+    <div className="split-heading"><div><div className="eyebrow">Community assessment dashboard</div><h1>Evidence, held to a higher standard.</h1></div><p className="lede">Respondent-level questionnaire responses are kept private and are not loaded on this public website.</p></div>
+    <div className="quality-notice"><strong>Data quality notice</strong><span>{dataQualityNotice}</span><small>Individual respondent records are not published.</small></div>
     {error ? <p className="error-message">{error}</p> : <>
       <div className="dashboard-top"><div><span>Workbook status</span><b>{rows.length ? 'Loaded from source' : 'Reading workbook…'}</b></div><div><span>Canonical regions</span><b>{canonicalRegions.length} defined</b></div><div><span>Mapped records</span><b>{rows.length ? `${mapped} reviewable` : '—'}</b></div></div>
       <div className="filter-row"><label>Canonical region<select value={region ?? ''} onChange={(event) => setRegion(event.target.value as CanonicalRegion || undefined)}><option value="">All verified mappings</option>{canonicalRegions.map((item) => <option key={item}>{item}</option>)}</select></label><p>Only verified canonical mappings are filterable. Unmapped values remain excluded from regional views pending review.</p></div>
