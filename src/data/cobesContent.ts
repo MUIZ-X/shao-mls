@@ -230,7 +230,7 @@ export const assessmentRegions = [
     },
     {
       heading: 'COMMUNITY RESOURCES IDENTIFIED',
-      content: 'Community resources include a borehole, two chemist shops, traditional healthcare practices, youth and elderly groups, a womenâ€™s cooperative group, stable electricity supply and traditional leadership structures.',
+      content: 'Community resources include a borehole, two chemist shops, traditional healthcare practices, youth and elderly groups, a women’s cooperative group, stable electricity supply and traditional leadership structures.',
     },
     {
       heading: 'HEALTH AND ENVIRONMENTAL CHALLENGES',
@@ -360,7 +360,7 @@ export const assessmentRegions = [
 {
   id: 'oke-iboo',
   name: 'Oke Iboo',
-  mapContext: 'Oke Iboo is a semi-urban settlement in Shao with several social, religious, educational and transportation landmarks that serve as important reference points for residents. Three churches were identified, namely the 3rd ECWA Church, Seventh-day Adventist Church and The Apostolic Church. Two mosques, Ibadur-Rahman Jumat Mosque and Elemosho Amá»na Mosque, were also identified. Other landmarks include Oloye Ibooâ€™s House, the NURTW Shao Garage and two major bus stops. Educational facilities include SDA/LGEA Primary School and ECWA Secondary School.',
+  mapContext: 'Oke Iboo is a semi-urban settlement in Shao with several social, religious, educational and transportation landmarks that serve as important reference points for residents. Three churches were identified, namely the 3rd ECWA Church, Seventh-day Adventist Church and The Apostolic Church. Two mosques, Ibadur-Rahman Jumat Mosque and Elemosho Amọna Mosque, were also identified. Other landmarks include Oloye Iboo’s House, the NURTW Shao Garage and two major bus stops. Educational facilities include SDA/LGEA Primary School and ECWA Secondary School.',
   focus: 'Environmental, healthcare-access and community-health context',
   detail: 'Oke Iboo contains important religious, educational and transportation facilities, including three churches, two mosques, two schools, the NURTW Shao Garage and two major bus stops. However, environmental concerns such as indiscriminate waste disposal, inadequate drainage, stagnant water and overgrown bushes were observed around some residential areas.',
 
@@ -395,7 +395,7 @@ export const assessmentRegions = [
     },
     {
       heading: 'COMMUNITY RESOURCES IDENTIFIED',
-      content: 'Community resources include three churches, two mosques, two educational institutions, Oloye Ibooâ€™s House as a community landmark, the NURTW Shao Garage and two major bus stops. These facilities support religious activities, education, transportation and community interaction.',
+      content: 'Community resources include three churches, two mosques, two educational institutions, Oloye Iboo’s House as a community landmark, the NURTW Shao Garage and two major bus stops. These facilities support religious activities, education, transportation and community interaction.',
     },
     {
       heading: 'HEALTH AND ENVIRONMENTAL CHALLENGES',
@@ -472,7 +472,7 @@ export const journeyStages = [
     image: '/cobes-data/shao-imgs/shaonova-img.jpg',
     imageAlt: 'COBES students gathered in laboratory coats in Shao',
     approach: 'Team leaders explained the purpose, planned activities, and expected duration of the posting through established community structures. The introduction created an opportunity to answer questions, establish communication, and invite guidance before field activities began.',
-    detail: 'Team leaders formally introduced the COBES posting and its purpose through the communityâ€™s established structures.',
+    detail: 'Team leaders formally introduced the COBES posting and its purpose through the community’s established structures.',
   },
   {
     id: 'kings-palace',
@@ -490,7 +490,7 @@ export const journeyStages = [
     image: '/cobes-data/shao-imgs/shao-village.jpg',
     imageAlt: 'Shao community landscape observed during familiarisation',
     approach: 'Students walked through the community, observed homes, roads, services, and gathering places, and spoke with residents about everyday life. These observations helped the team understand local livelihoods, culture, beliefs, and community resources before designing assessment activities.',
-    detail: 'The team learned about Shaoâ€™s culture, beliefs, religious harmony, livelihoods, and everyday community life.',
+    detail: 'The team learned about Shao’s culture, beliefs, religious harmony, livelihoods, and everyday community life.',
   },
   {
     id: 'facility-visits',
@@ -516,7 +516,7 @@ export const journeyStages = [
     label: 'Prevention',
     image: '/cobes-data/shao-imgs/shao-mls-outreach.jpg',
     imageAlt: 'Students participating in a community health education activity',
-    approach: 'Students held clear, practical health conversations with residents and school-age children. Sessions covered malaria and typhoid prevention, personal hygiene, sanitation, and everyday protective practices, with time for questions so the guidance could respond to participantsâ€™ concerns.',
+    approach: 'Students held clear, practical health conversations with residents and school-age children. Sessions covered malaria and typhoid prevention, personal hygiene, sanitation, and everyday protective practices, with time for questions so the guidance could respond to participants’ concerns.',
     detail: 'Health conversations on malaria, typhoid, hygiene, sanitation, and personal health reached residents and school-age children.',
   },
   {
@@ -553,7 +553,7 @@ export const journeyStages = [
     image: '/cobes-data/shao-imgs/Shao-map.png',
     imageAlt: 'Community map supporting review of assessment coverage and field activities',
     approach: 'The team reviewed activity records and participation, compared delivered work with the original plan, and documented outputs and feedback. Evaluation notes captured lessons and recommendations for future work, while distinguishing immediate results from longer-term changes that require follow-up.',
-    detail: 'The project documents activity, output, outcome, and long-term impact as relatedâ€”but distinctâ€”parts of accountable reporting.',
+    detail: 'The project documents activity, output, outcome, and long-term impact as related—but distinct—parts of accountable reporting.',
   },
 ] as const;
 
@@ -723,28 +723,28 @@ export const searchItems: SearchItem[] = [
   ...generalSearchItems,
   ...assessmentRegions.map((region) => ({
     label: region.name,
-    detail: `Assessment region Â· ${region.focus}`,
+    detail: `Assessment region · ${region.focus}`,
     category: 'Community region',
     target: `region-${region.id}`,
     action: { type: 'region' as const, value: region.id },
   })),
   ...learningExperiences.map((experience) => ({
     label: experience.title,
-    detail: `Learning experience Â· ${experience.outcome}`,
+    detail: `Learning experience · ${experience.outcome}`,
     category: 'Learning',
     target: `learning-${experience.id}`,
     action: { type: 'learning' as const, value: experience.id },
   })),
   ...journeyStages.map((stage) => ({
     label: stage.title,
-    detail: `Project journey Â· ${stage.label}`,
+    detail: `Project journey · ${stage.label}`,
     category: 'Journey',
     target: `journey-${stage.id}`,
     action: { type: 'journey' as const, value: stage.id },
   })),
   ...teamCategories.map((team) => ({
     label: team.title,
-    detail: `Team Â· ${team.role}`,
+    detail: `Team · ${team.role}`,
     category: 'Team',
     target: `team-${team.id}`,
     action: { type: 'team' as const, value: team.id },

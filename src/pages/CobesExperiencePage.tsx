@@ -96,16 +96,16 @@ const assessmentDistributions: Distribution[] = [
     title: 'Age distribution of respondents',
     type: 'bar',
     data: [
-      { label: '18â€“27', value: 24.7 },
-      { label: '28â€“37', value: 21.9 },
-      { label: '38â€“47', value: 19.4 },
-      { label: '48â€“57', value: 10.4 },
-      { label: '58â€“67', value: 11.1 },
-      { label: '68â€“77', value: 9.4 },
-      { label: '78â€“87', value: 3.1 },
+      { label: '18–27', value: 24.7 },
+      { label: '28–37', value: 21.9 },
+      { label: '38–47', value: 19.4 },
+      { label: '48–57', value: 10.4 },
+      { label: '58–67', value: 11.1 },
+      { label: '68–77', value: 9.4 },
+      { label: '78–87', value: 3.1 },
     ],
     description:
-      'The respondents comprised individuals across a wide range of age groups. The most frequently occurring age was 30 years, while the reported median age was 35 years. The average age was estimated to be approximately 38â€“40 years.',
+      'The respondents comprised individuals across a wide range of age groups. The most frequently occurring age was 30 years, while the reported median age was 35 years. The average age was estimated to be approximately 38–40 years.',
   },
   {
     id: 'religion',
@@ -144,13 +144,13 @@ const assessmentDistributions: Distribution[] = [
     title: 'Number of people in households',
     type: 'bar',
     data: [
-      { label: '1â€“3', value: 10.7 },
-      { label: '4â€“6', value: 44.1 },
-      { label: '7â€“10', value: 32.2 },
+      { label: '1–3', value: 10.7 },
+      { label: '4–6', value: 44.1 },
+      { label: '7–10', value: 32.2 },
       { label: '11+', value: 13.1 },
     ],
     description:
-      'The survey indicated that an average of approximately 7 people live in a household. Households containing 4â€“6 people formed the largest reported group.',
+      'The survey indicated that an average of approximately 7 people live in a household. Households containing 4–6 people formed the largest reported group.',
   },
   {
     id: 'sex',
@@ -190,11 +190,11 @@ const assessmentDistributions: Distribution[] = [
       { label: 'Primary', value: 11.9 },
       { label: 'None', value: 0.5 },
       { label: 'ND', value: 0.2 },
-      { label: 'Masterâ€™s', value: 0.2 },
+      { label: 'Master’s', value: 0.2 },
       { label: 'HND', value: 0.2 },
     ],
     description:
-      'The educational background of the people of Shao varied considerably. The majority completed secondary school, while others had tertiary, no formal, and primary education. Other recorded qualifications included ND, HND and Masterâ€™s degrees.',
+      'The educational background of the people of Shao varied considerably. The majority completed secondary school, while others had tertiary, no formal, and primary education. Other recorded qualifications included ND, HND and Master’s degrees.',
   },
 ];
 
@@ -470,7 +470,7 @@ export function CobesExperiencePage() {
               variants={reveal}
               transition={{ duration: 0.55, ease: 'easeOut' }}
             >
-              <p className="cobes-eyebrow">University of Ilorin Â· Medical Laboratory Science Â· Class of 2026</p>
+              <p className="cobes-eyebrow">University of Ilorin · Medical Laboratory Science · Class of 2026</p>
               <img
                 className="cobes-hero__brand"
                 src="/cobes-data/shao-imgs/shaonova-logo.png"
@@ -893,7 +893,7 @@ export function CobesExperiencePage() {
                 <h2 id="team-heading">One team, many essential roles.</h2>
               </div>
               <p>
-                The team structure makes each strand of the work visibleâ€”from supervision and coordination
+                The team structure makes each strand of the work visible—from supervision and coordination
                 to community education, evidence, logistics, and technical documentation.
               </p>
             </motion.div>
@@ -1008,7 +1008,7 @@ export function CobesExperiencePage() {
       <footer className="cobes-footer">
         <div className="cobes-container">
           <div>
-            <p className="cobes-eyebrow">University of Ilorin Â· Department of Medical Laboratory Science</p>
+            <p className="cobes-eyebrow">University of Ilorin · Department of Medical Laboratory Science</p>
             <h2>COBES / Shao Community</h2>
           </div>
           <p>Together for health. Stand with science.</p>
@@ -1040,7 +1040,7 @@ export function CobesExperiencePage() {
               <button type="button" className="cobes-modal__close" onClick={() => setModalOpen(false)} aria-label="Close assessment note">
                 <X aria-hidden="true" size={20} />
               </button>
-              <p className="cobes-eyebrow">Assessment note Â· {selectedRegion.name}</p>
+              <p className="cobes-eyebrow">Assessment note · {selectedRegion.name}</p>
               <h2 id="assessment-note-title">COMMUNITY MAPPING</h2>
               <div className="cobes-modal__content">
                 <h4 className="cobes-eyebrow">ROAD NETWORK AND TRANSPORTATION</h4>
@@ -1140,7 +1140,7 @@ export function CobesExperiencePage() {
                 <span>{journeyModalStage.label}</span>
               </div>
               <div className="cobes-journey-modal__content">
-                <p className="cobes-eyebrow">Project journey Â· {journeyModalStage.label}</p>
+                <p className="cobes-eyebrow">Project journey · {journeyModalStage.label}</p>
                 <h2 id="journey-modal-title">{journeyModalStage.title}</h2>
                 <div>
                   <h3>Project overview</h3>

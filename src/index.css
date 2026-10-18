@@ -2721,7 +2721,7 @@ img {
 }
 
 /* =========================================================
-   MLO EXPLORER â€” SHA0 COBES PALETTE
+   MLO EXPLORER — SHA0 COBES PALETTE
    Inject once into index.css.
    Uses only the approved website colours:
    #0A192F #112240 #1B2A41 #1DB954 #1ED760
@@ -3831,15 +3831,26 @@ img {
   }
 
   .cobes-map-stage {
-    height: 330px;
-    min-height: 330px;
+    height: clamp(440px, 125vw, 520px);
+    min-height: 440px;
     border-radius: 13px 13px 0 0;
   }
 
   .cobes-map-region-tag {
-    min-height: 22px;
-    padding: .24rem .32rem;
-    font-size: 6px;
+    min-height: 27px;
+    padding: .34rem .48rem;
+    font-size: clamp(8px, 2.45vw, 9.5px);
+  }
+
+  .cobes-map-region-tag--primary {
+    border-color: rgba(245, 184, 110, .88);
+    background: rgba(55, 40, 27, .97);
+    color: #fff1d5;
+    box-shadow: 0 5px 16px rgba(0, 0, 0, .52), 0 0 0 1px rgba(238, 165, 85, .2);
+  }
+
+  .cobes-map-region-tag--landmark {
+    font-size: clamp(7.5px, 2.2vw, 8.5px);
   }
 
   .cobes-map-landmark-tag {
@@ -3997,7 +4008,11 @@ img {
   }
 
   .cobes-team-modal {
-    max-height: calc(100vh - 1.2rem);
+    width: min(520px, calc(100vw - 1.25rem));
+    height: 55vh;
+    height: 55dvh;
+    max-height: 55vh;
+    max-height: 55dvh;
     padding: 1rem;
     border-radius: 16px;
   }
@@ -4006,6 +4021,10 @@ img {
     align-items: flex-start;
     flex-direction: column;
     gap: .65rem;
+  }
+
+  .cobes-team-modal .cobes-team-roster__list {
+    flex: 1 1 auto;
   }
 }
 
@@ -4076,12 +4095,17 @@ img {
   .cobes-map-stage {
     height: clamp(350px, 70vw, 560px);
     min-height: 350px;
+    touch-action: pan-y;
+  }
+
+  .cobes-field-map-canvas {
+    touch-action: pan-y;
   }
 }
 
 @media (max-width: 520px) {
   .cobes-map-stage {
-    height: 340px;
-    min-height: 340px;
+    height: clamp(440px, 125vw, 520px);
+    min-height: 440px;
   }
 }

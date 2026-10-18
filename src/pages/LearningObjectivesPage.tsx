@@ -1,4 +1,4 @@
-﻿import { motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ArrowLeft, ArrowRight, Play, Sparkles } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
@@ -63,7 +63,7 @@ function LearningFooter() {
     <footer className="cobes-footer">
       <div className="cobes-container">
         <div>
-          <p className="cobes-eyebrow">University of Ilorin Â· Department of Medical Laboratory Science</p>
+          <p className="cobes-eyebrow">University of Ilorin · Department of Medical Laboratory Science</p>
           <h2>COBES / Shao Community</h2>
         </div>
         <p>Together for health. Stand with science.</p>

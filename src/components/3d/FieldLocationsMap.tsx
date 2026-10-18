@@ -783,6 +783,51 @@ const regionLabelSides: Partial<Record<FieldMapLocationId, 1 | -1>> = {
   'sobi-hills': -1,
 };
 
+function CommunitySchool() {
+  return (
+    <group rotation={[0, 0.14, 0]}>
+      <mesh position={[0, 0.22, 0]} castShadow receiveShadow>
+        <boxGeometry args={[0.78, 0.38, 0.62]} />
+        <meshStandardMaterial color="#91836a" roughness={0.94} />
+      </mesh>
+      <GableRoof width={0.86} depth={0.7} eave={0.43} ridge={0.64} color="#78523b" />
+      <mesh position={[0, 0.21, 0.316]}>
+        <boxGeometry args={[0.1, 0.24, 0.018]} />
+        <meshStandardMaterial color="#69513c" roughness={0.9} />
+      </mesh>
+      {[-0.25, 0.25].map((x) => (
+        <mesh key={x} position={[x, 0.27, 0.317]}>
+          <boxGeometry args={[0.12, 0.11, 0.018]} />
+          <meshStandardMaterial color="#697a6d" roughness={0.83} />
+        </mesh>
+      ))}
+      <mesh position={[0, 0.08, 0.38]} receiveShadow>
+        <boxGeometry args={[1.1, 0.035, 0.34]} />
+        <meshStandardMaterial color="#9b8763" roughness={0.99} />
+      </mesh>
+    </group>
+  );
+}
+
+function MapPinLandmark({ color = '#a27c49' }: { color?: string }) {
+  return (
+    <group>
+      <mesh position={[0, 0.06, 0]} receiveShadow>
+        <cylinderGeometry args={[0.16, 0.2, 0.1, 12]} />
+        <meshStandardMaterial color="#716449" roughness={0.98} />
+      </mesh>
+      <mesh position={[0, 0.27, 0]} castShadow>
+        <cylinderGeometry args={[0.035, 0.055, 0.36, 10]} />
+        <meshStandardMaterial color="#796044" roughness={0.9} />
+      </mesh>
+      <mesh position={[0, 0.52, 0]} castShadow>
+        <sphereGeometry args={[0.13, 16, 12]} />
+        <meshStandardMaterial color={color} roughness={0.76} />
+      </mesh>
+    </group>
+  );
+}
+
 function LandmarkShape({ landmark }: { landmark: FieldMapLandmark }) {
   const position: [number, number, number] = [0, 0, 0];
   switch (landmark.type) {
@@ -794,8 +839,16 @@ function LandmarkShape({ landmark }: { landmark: FieldMapLandmark }) {
       return <Clinic position={position} />;
     case 'palace':
       return <Palace position={position} />;
+    case 'school':
+      return <CommunitySchool />;
+    case 'place':
+      return <MapPinLandmark />;
+    case 'outreach':
+      return <MapPinLandmark color="#a45f48" />;
+    case 'project':
+      return <MapPinLandmark color="#76865b" />;
     default:
-      return null;
+      return <MapPinLandmark />;
   }
 }
 
@@ -836,7 +889,7 @@ function InteractiveRegionLabels({ selectedLocationId, onSelect }: {
             <Html position={[side * 0.72, labelLift, 0]} center distanceFactor={13} zIndexRange={[30, 0]} style={{ pointerEvents: 'auto' }}>
               <button
                 type="button"
-                className={'cobes-map-region-tag ' + (side > 0 ? 'cobes-map-region-tag--east' : 'cobes-map-region-tag--west') + (active ? ' is-active' : '')}
+                className={'cobes-map-region-tag ' + (location.id === 'sobi-hills' ? 'cobes-map-region-tag--landmark' : 'cobes-map-region-tag--primary') + ' ' + (side > 0 ? 'cobes-map-region-tag--east' : 'cobes-map-region-tag--west') + (active ? ' is-active' : '')}
                 aria-label={`Show ${location.label} assessment`}
                 aria-pressed={active}
                 onPointerDown={(event) => event.stopPropagation()}
@@ -866,21 +919,35 @@ function LandscapeControls() {
 
   useEffect(() => {
     if (!(camera instanceof THREE.PerspectiveCamera)) return;
-    camera.position.set(0, portrait ? 12.4 : 9.3, portrait ? 22.8 : 17.2);
-    camera.fov = portrait ? 44 : 31;
+    const target: [number, number, number] = [0, 0.45, 0];
+    const fov = portrait ? 46 : 31;
+    const aspect = Math.max(size.width / size.height, 0.1);
+    const pitch = Math.atan2(portrait ? 11.55 : 8.85, portrait ? 24 : 17.2);
+    const distance = MAP_WIDTH / (0.8 * 2 * Math.tan(THREE.MathUtils.degToRad(fov / 2)) * aspect);
+
+    camera.position.set(
+      target[0],
+      target[1] + Math.sin(pitch) * distance,
+      target[2] + Math.cos(pitch) * distance,
+    );
+    camera.fov = fov;
     camera.updateProjectionMatrix();
-  }, [camera, portrait]);
+  }, [camera, portrait, size.height, size.width]);
 
   return (
     <OrbitControls
       makeDefault
       target={[0, 0.45, 0]}
-      enablePan={false}
+      enablePan
       enableZoom={false}
       enableRotate
       enableDamping
       dampingFactor={0.08}
       rotateSpeed={portrait ? 0.46 : 0.74}
+      zoomSpeed={0.58}
+      panSpeed={0.62}
+      minDistance={13}
+      maxDistance={38}
       autoRotate={false}
       minPolarAngle={0.18}
       maxPolarAngle={Math.PI * 0.49}

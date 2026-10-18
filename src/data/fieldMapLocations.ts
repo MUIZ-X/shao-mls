@@ -21,13 +21,13 @@ export const fieldMapLandmarks = [
   { id: 'ecwa-church', label: 'ECWA CHURCH', type: 'church', mapPosition: [0.34, 0.59] },
   { id: 'ecwa-clinic', label: 'ECWA CLINIC', type: 'clinic', mapPosition: [0.47, 0.88] },
   { id: 'ministry-health-centre', label: 'MINISTRY HEALTH CENTRE', type: 'clinic', mapPosition: [0.72, 0.59] },
-  { id: 'muslim-community-school', label: 'MUSLIM COMMUNITY SCHOOL', type: 'marker', mapPosition: [0.59, 0.90] },
-  { id: 'baptist-college', label: 'BAPTIST COLLEGE OF HEALTH TECH.', type: 'marker', mapPosition: [0.83, 0.77] },
-  { id: 'jagodo-malete', label: 'JAGODO (MALETE)', type: 'marker', mapPosition: [0.17, 0.16] },
-  { id: 'oloru', label: 'OLORU', type: 'marker', mapPosition: [0.88, 0.08] },
-  { id: 'omilende', label: 'OMILENDE', type: 'marker', mapPosition: [0.50, 0.94] },
-  { id: 'outreach-point', label: 'OUTREACH', type: 'marker', mapPosition: [0.31, 0.52] },
-  { id: 'project-point', label: 'PROJECT', type: 'marker', mapPosition: [0.52, 0.47] },
+  { id: 'muslim-community-school', label: 'MUSLIM COMMUNITY SCHOOL', type: 'school', mapPosition: [0.59, 0.90] },
+  { id: 'baptist-college', label: 'BAPTIST COLLEGE OF HEALTH TECH.', type: 'school', mapPosition: [0.83, 0.77] },
+  { id: 'jagodo-malete', label: 'JAGODO (MALETE)', type: 'place', mapPosition: [0.17, 0.16] },
+  { id: 'oloru', label: 'OLORU', type: 'place', mapPosition: [0.88, 0.08] },
+  { id: 'omilende', label: 'OMILENDE', type: 'place', mapPosition: [0.50, 0.94] },
+  { id: 'outreach-point', label: 'OUTREACH', type: 'outreach', mapPosition: [0.31, 0.52] },
+  { id: 'project-point', label: 'PROJECT', type: 'project', mapPosition: [0.52, 0.47] },
 ] as const;
 
 export type FieldMapLandmark = (typeof fieldMapLandmarks)[number];
