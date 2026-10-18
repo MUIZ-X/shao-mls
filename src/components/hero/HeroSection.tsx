@@ -1,45 +1,50 @@
-// export function HeroSection() {
-//   throw new Error("🔥 I AM EDITING THE REAL HERO SECTION 🔥");
+import { Link } from 'react-router-dom';
 
-//   // ...
+export function HeroSection() {
+  return (
+    <section className="cobes-hero">
+      <div className="cobes-hero__backdrop" aria-hidden="true" />
+      <div className="cobes-container cobes-hero__layout">
+        <div className="cobes-hero__copy">
+          <img
+            className="cobes-hero__brand"
+            src="/cobes-data/shao-imgs/shaonova-logo.png"
+            alt="SHAONOVA"
+          />
+          <p className="cobes-eyebrow">COBES / SHAO COMMUNITY</p>
+          <h1>
+            Together for Health:
+            <span>Stand with Science.</span>
+          </h1>
+          <p className="cobes-hero__lede">
+            Improving community health through evidence, education, prevention and accessible
+            laboratory services.
+          </p>
+          <div className="cobes-button-row">
+            <Link className="cobes-button cobes-button--primary" to="/shao-community">
+              Explore our community
+            </Link>
+            <Link className="cobes-button cobes-button--quiet" to="/project">
+              Explore our project
+            </Link>
+          </div>
+        </div>
 
-//   import { Link } from 'react-router-dom';
-//   import { projectStatus } from '../../data/projectData';
-
-//   export function HeroSection() {
-//     // small interaction: update CSS variables on mouse move for subtle parallax
-//     const onMove = (e: React.MouseEvent) => {
-//       const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-//       const x = ((e.clientX - rect.left) / rect.width) * 100;
-//       const y = ((e.clientY - rect.top) / rect.height) * 100;
-//       document.body.setAttribute('data-mx', '');
-//       document.documentElement.style.setProperty('--mx', String(x));
-//       document.documentElement.style.setProperty('--my', String(y));
-//     };
-
-//     return (
-//       <section className="hero" onMouseMove={onMove}>
-//         <div className="hero-copy">
-//           {/* <p className="kicker">University of Ilorin / Medical Laboratory Science</p> */}
-//           <p className="kicker">🔥 THIS IS THE FILE I AM EDITING 🔥</p>
-//           <div className="hero-label">COBES / SHAO COMMUNITY</div>
-//           <h1>
-//             Together for Health:
-//             <br />
-//             <em>Stand with Science.</em>
-//           </h1>
-//           <p>
-//             Improving community health through evidence, education, prevention and accessible
-//             laboratory services.
-//           </p>
-//           <div className="hero-actions">
-//             <Link className="button primary" to="/shao-community">Explore our community</Link>
-//             <Link className="button" to="/project">Explore our project</Link>
-//           </div>
-//         </div>
-//         <div className="hero-image">
-//           <img src="../public/cobes-data/shaonova-img.jpg" alt="SHAONOVA" />
-//         </div>
-//       </section>
-//     );
-//   }
+        <aside className="cobes-hero__who-card">
+          <div className="cobes-hero__who-topline">
+            <span>Community-based learning</span>
+            <span>SHAONOVA</span>
+          </div>
+          <div className="cobes-hero__who-image-wrap">
+            <img src="/cobes-data/shao-imgs/WHO-IMG.png" alt="World Health Organization" />
+          </div>
+          <p className="cobes-eyebrow">Our work in Shao</p>
+          <h2>Evidence, education and service.</h2>
+          <p>
+            A community partnership documenting local health needs and supporting informed action.
+          </p>
+        </aside>
+      </div>
+    </section>
+  );
+}

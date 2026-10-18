@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import MloExplorer from "../components/MloExplorer";
+import { MloExplorer } from '../data/mloContent';
 import {
   ArrowDownRight,
   ArrowRight,
@@ -330,9 +330,9 @@ function AnimatedBarChart({ data }: { data: DistributionItem[] }) {
 
 export function CobesExperiencePage() {
   const [selectedDistributionId, setSelectedDistributionId] = useState('health-challenges');
-  const [selectedRegionId, setSelectedRegionId] = useState(assessmentRegions[0].id);
-  const [selectedLearningId, setSelectedLearningId] = useState(learningExperiences[0].id);
-  const [selectedJourneyId, setSelectedJourneyId] = useState(journeyStages[0].id);
+  const [selectedRegionId, setSelectedRegionId] = useState<string>(assessmentRegions[0].id);
+  const [selectedLearningId, setSelectedLearningId] = useState<string>(learningExperiences[0].id);
+  const [selectedJourneyId, setSelectedJourneyId] = useState<string>(journeyStages[0].id);
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
 

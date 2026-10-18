@@ -32,9 +32,8 @@ export function Navbar({ searchItems, onSearchNavigate }: NavbarProps) {
           target: item.target,
           top: document.getElementById(item.target)?.getBoundingClientRect().top ?? Number.POSITIVE_INFINITY,
         }))
-        .filter((item) => item.top <= window.innerHeight * 0.42)
-        .at(-1);
-      setActiveSection(matching?.target ?? 'home');
+        .filter((item) => item.top <= window.innerHeight * 0.42);
+      setActiveSection(matching[matching.length - 1]?.target ?? 'home');
     };
 
     updateActiveSection();

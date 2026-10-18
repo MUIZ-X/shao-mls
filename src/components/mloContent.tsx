@@ -1,9 +1,9 @@
-import { MloExplorer } from "../data/mloContent";
+
 
 export type MloContentSection = { heading: string; paragraphs: string[] };
 export type MloMediaBlock = { kind: 'media'; type: 'image' | 'video'; label: string; src: string; alt?: string; poster?: string; description?: string };
 export type MloContentBlock = { kind: 'content'; heading: string; paragraphs: string[] } | MloMediaBlock;
-export type MloItem = { id: string; source: string; title: string; kind: 'general' | 'specific' | 'optional'; objective: string; blocks: MloContentBlock[] };
+export type MloItem = { id: string; source: string; title: string; kind: 'general' | 'specific' | 'optional'; objective: string; sections?: MloContentSection[]; blocks: MloContentBlock[] };
  
 export const mloItems: MloItem[] = [
   {
